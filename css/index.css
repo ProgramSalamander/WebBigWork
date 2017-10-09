@@ -1,0 +1,105 @@
+body{
+    background: url("../imgs/background.jpg") no-repeat;
+    background-size: 100% 140%;
+    overflow: hidden;
+}
+h1 {
+    text-align: center;
+    margin-top: 200px;
+    margin-bottom: 100px;
+    color: white;
+    font-size: 48px;
+}
+
+.signBtn{
+    width: 200px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    background: #9e93bd;
+    color: white;
+    font-size: 14px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.48);
+}
+
+.signBtn:hover{
+    background: #9280BD;
+}
+
+.signBtn:active{
+    background: #9e93bd;
+}
+
+ul{
+    list-style: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+ul li{
+    margin-bottom: 40px;
+}
+
+.signDiv{
+    width: 35%;
+    height: 60%;
+    top: 2000px;
+    left: 32.5%;
+    background: rgba(255, 255, 255, 0.2);
+    position: absolute;
+}
+.signDiv h2{
+    text-align: center;
+    margin-top: 50px;
+    color: white;
+    margin-bottom: 50px;
+}
+#signUpDiv h2{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.signDiv form {
+    text-align: center;
+}
+.signDiv form input{
+    text-align: center;
+    color: #7753bd;
+}
+.signDiv form label{
+    width: 120px;
+    color: white;
+    text-align: center;
+    display: inline-block;
+}
+
+#signUpDiv ul li{
+    margin-bottom: 20px;
+}
+
+#signInUsername, #signInPassword, #signUpUsername, #signUpPassword, #signUpEnsurePassword{
+    width: 200px;
+    height: 30px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.6);
+    margin-bottom: 15px;
+}
+#signUpRoleActive, #signUpRolePassive{
+    margin-bottom: 15px;
+    margin-right: 10px;
+}
+
+#previousArrow{
+    top: 2000px;
+    width: 4%;
+    left: 48%;
+    position: absolute;
+    cursor: pointer;
+}
+
+#likePart label{
+    width: 100px;
+}
