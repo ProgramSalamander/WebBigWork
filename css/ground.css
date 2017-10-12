@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: url("../imgs/background-dark.jpg");
+    min-height: 100vh;
+    background-size: cover;
+    overflow: hidden;
+}
+
+#leftNavigator {
+    width: 25%;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(158, 147, 189, 0.9) 0%, rgba(255, 255, 255, 0.47) 30%);
+}
+
+#personalInfoDiv {
+    padding-top: 30px;
+    color: white;
+    text-align: center;
+}
+#infoList{
+    width: 100%;
+    list-style: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+#infoList li{
+    text-align: center;
+}
+
+#headPic {
+    width: 140px;
+    height: 140px;
+    border-radius: 70px;
+    margin-bottom: 30px;
+    display: inline-block;
+    /*position: relative;*/
+}
+
+#entryList{
+    width: 100%;
+    margin-top: 50px;
+}
+#entryList li{
+    font-size: large;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+#entryList li img{
+    width: 22px;
+    vertical-align: middle;
+    margin-right: 30px;
+}
+
+#entryList .active{
+    background: rgba(146, 128, 189, 0.7);
+    border-left: 5px solid #7753bd;
+    border-right: 5px solid transparent;
+}
+#entryList .active img{
+    transform: rotate(360deg);
+    transition: 0.5s;
+}
