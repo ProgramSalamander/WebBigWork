@@ -10,83 +10,89 @@ h1{
     color: white;
 }
 
-.signBtn{
-    width: 200px;
-    height: 40px;
+.uk-button-secondary{
+    width: 220px;
     text-align: center;
-    border: none;
-    border-radius: 5px;
-    background: #9e93bd;
-    color: white;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.48);
+    font-size: larger;
 }
 
-.signBtn:hover{
-    background: #9280BD;
-}
+/*.signBtn{*/
+    /*width: 200px;*/
+    /*height: 40px;*/
+    /*text-align: center;*/
+    /*border: none;*/
+    /*border-radius: 5px;*/
+    /*background: #9e93bd;*/
+    /*color: white;*/
+    /*font-size: 14px;*/
+    /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.48);*/
+/*}*/
 
-.signBtn:active{
-    background: #9e93bd;
-}
+/*.signBtn:hover{*/
+    /*background: #9280BD;*/
+/*}*/
 
-ul{
-    list-style: none;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-ul li{
-    margin-bottom: 40px;
-}
+/*.signBtn:active{*/
+    /*background: #9e93bd;*/
+/*}*/
 
-.signDiv{
-    width: 30%;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 3px solid #9280BD;
-    border-radius: 10px;
-    display: none;
-}
-.signDiv h2{
-    text-align: center;
-}
-.signDiv form {
-    text-align: center;
-}
-.signDiv form input{
-    text-align: center;
-    /*color: #7753bd;*/
-}
-.signDiv form label{
-    width: 120px;
-    text-align: center;
-    display: inline-block;
-}
+/*ul{*/
+    /*list-style: none;*/
+    /*text-align: center;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
+/*}*/
+/*ul li{*/
+    /*margin-bottom: 40px;*/
+/*}*/
 
-#signInUsername, #signInPassword, #signUpUsername, #signUpPassword, #signUpEnsurePassword{
-    width: 180px;
-    height: 30px;
-    text-align: center;
-    border-radius: 5px;
-    border: 1px solid #7753bd;
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.9);
-    margin-bottom: 15px;
-}
-#signUpRoleActive, #signUpRolePassive{
-    margin-bottom: 15px;
-    margin-right: 10px;
-}
+/*.signDiv{*/
+    /*width: 30%;*/
+    /*padding: 30px;*/
+    /*background: rgba(255, 255, 255, 0.9);*/
+    /*border: 3px solid #9280BD;*/
+    /*border-radius: 10px;*/
+    /*display: none;*/
+/*}*/
+/*.signDiv h2{*/
+    /*text-align: center;*/
+/*}*/
+/*.signDiv form {*/
+    /*text-align: center;*/
+/*}*/
+/*.signDiv form input{*/
+    /*text-align: center;*/
+    /*!*color: #7753bd;*!*/
+/*}*/
+/*.signDiv form label{*/
+    /*width: 120px;*/
+    /*text-align: center;*/
+    /*display: inline-block;*/
+/*}*/
 
-#previousArrow{
-    top: 2000px;
-    width: 4%;
-    left: 48%;
-    position: absolute;
-    cursor: pointer;
-}
+/*#signInUsername, #signInPassword, #signUpUsername, #signUpPassword, #signUpEnsurePassword{*/
+    /*width: 180px;*/
+    /*height: 30px;*/
+    /*text-align: center;*/
+    /*border-radius: 5px;*/
+    /*border: 1px solid #7753bd;*/
+    /*font-size: 14px;*/
+    /*background: rgba(255, 255, 255, 0.9);*/
+    /*margin-bottom: 15px;*/
+/*}*/
+/*#signUpRoleActive, #signUpRolePassive{*/
+    /*margin-bottom: 15px;*/
+    /*margin-right: 10px;*/
+/*}*/
 
-#likePart label{
-    width: 100px;
-}
+/*#previousArrow{*/
+    /*top: 2000px;*/
+    /*width: 4%;*/
+    /*left: 48%;*/
+    /*position: absolute;*/
+    /*cursor: pointer;*/
+/*}*/
+
+/*#likePart label{*/
+    /*width: 100px;*/
+/*}*/
