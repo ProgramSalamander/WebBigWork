@@ -1,0 +1,26 @@
+#headPic {
+    width: 6vh;
+    height: 6vh;
+}
+
+.uk-navbar-dropdown {
+    padding: 15px;
+}
+
+.uk-search-input {
+    font-size: .875rem !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+    padding-left: 10px;
+}
+
+.uk-card-footer {
+    padding: 15px;
+}
+
+#todayStarTotalLikes, #todayStarTotalComments {
+    background: #f0506e;
+}
+
+footer div{
+  height: 100px;
+}

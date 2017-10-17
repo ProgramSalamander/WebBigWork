@@ -2,38 +2,47 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 广场</title>
-        <link rel="stylesheet" type="text/css" href="../css/ground.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <title>iPaiPai - 专注于约拍的网站</title>
+        <link rel="stylesheet" href="../css/uikit.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../css/home.css">
+
+        <script src="../js/jquery-3.2.1.min.js"></script>
+        <script src="../js/uikit.min.js"></script>
+        <script src="../js/uikit-icons.min.js"></script>
     </head>
     <body>
-        <div class="animated bounceInLeft" id="leftNavigator">
-            <div id="personalInfoDiv">
-                <ul id="infoList">
-                    <li><img src="../imgs/photo3.jpeg" id="headPic"></li>
-                    <li><span id="nickName">徐徐徐杨晨</span>，<span id="time">下午</span>好！</li>
-                </ul>
+        <header>
+            <nav class="uk-background-secondary uk-light" uk-navbar>
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="../index.html"><span class="uk-margin-small-right uk-icon"
+                                                                                 uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
+                </div>
+                <div class="uk-navbar-right">
+                    <div>
+                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
+                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="搜索用户/地区..." autofocus>
+                            </form>
+                        </div>
+                    </div>
+                    <ul class="uk-navbar-nav">
+                        <li><a href="home.html">今日推荐</a></li>
+                        <li class="uk-active"><a href="">四处逛逛</a></li>
+                        <li><a href="mypage.html">我的主页</a></li>
+                        <li><a href="messages.html">我的消息<span class="uk-badge">8</span></a></li>
+                        <li>
+                            <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
+                            <div class="uk-width-small uk-navbar-dropdown">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li><a href=""><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
 
-                <ul id="entryList">
-                    <li class="active"><img src="../imgs/icon_ground.png"/>四处逛逛</li>
-                    <li><img src="../imgs/icon_message.png">我的消息</li>
-                    <li><img src="../imgs/icon_personalCenter.png">个人主页</li>
-                </ul>
-                <script>
-                    let entryList = document.getElementById('entryList');
-                    let entries = entryList.getElementsByTagName('li');
-
-                    let lastEntry = entries[0];
-
-                    for(let i = 0; i < entries.length; i++){
-                        entries[i].onclick = function () {
-                            lastEntry.className = '';
-                            this.className = 'active';
-                            lastEntry = this;
-                        }
-                    }
-                </script>
-            </div>
-        </div>
     </body>
 </html>
