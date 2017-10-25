@@ -1,0 +1,15 @@
+#totalWorks {
+    background: #32d296;
+}
+
+#totalLikes {
+    background: #f0506e;
+}
+
+#saveNicknameContainer input{
+    width: 200px;
+}
+
+#saveSignContainer input{
+    width: 250px;
+}

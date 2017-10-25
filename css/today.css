@@ -17,7 +17,7 @@
     padding: 15px;
 }
 
-.like-badge{
+.like-badge {
     background: #f0506e;
 }
 
@@ -29,14 +29,19 @@ footer div {
     width: 150px;
     height: 150px;
 }
+
 .top10-head-pic {
     width: 90px;
     height: 90px;
 }
 
-.top3-icon{
+.top3-icon {
     width: 80px;
     height: 80px;
     margin-top: 40px;
     /*margin-bottom: 40px;*/
+}
+
+.uk-navbar-dropdown-nav li span{
+    margin-right: 20px;
 }
