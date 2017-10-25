@@ -16,3 +16,8 @@ h1{
     font-size: larger;
     border-radius: 50px;
 }
+
+.uk-notification-message{
+    font-size: 1rem;
+    text-align: center;
+}

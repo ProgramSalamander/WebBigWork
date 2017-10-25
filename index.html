@@ -6,9 +6,9 @@
         <link rel="stylesheet" href="css/uikit.min.css"/>
         <link rel="stylesheet" href="css/index.css"/>
 
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/uikit.min.js"></script>
-        <script src="js/uikit-icons.min.js"></script>
+        <script src="js/lib/jquery-3.2.1.min.js"></script>
+        <script src="js/lib/uikit.min.js"></script>
+        <script src="js/lib/uikit-icons.min.js"></script>
         <script src="js/cookie.js"></script>
         <script src="js/url.js"></script>
     </head>
@@ -42,12 +42,12 @@
                     <fieldset class="uk-fieldset">
                         <legend class="uk-legend">登录</legend>
                         <div class="uk-margin">
-                            <input class="uk-input" type="text" placeholder="用户名"/>
+                            <input id="signInUsername" class="uk-input" type="text" placeholder="用户名"/>
                         </div>
                         <div class="uk-margin">
-                            <input class="uk-input" type="password" placeholder="密码"/>
+                            <input id="signInPassword" class="uk-input" type="password" placeholder="密码"/>
                         </div>
-                        <button id="signInBtn" class="uk-form-width-medium uk-button-default uk-button-large">登录</button>
+                        <button id="signInBtn" class="uk-form-width-medium uk-button-default uk-button">登录</button>
                     </fieldset>
                     <div class="uk-margin">
                         还没有账号？点<a id="toSignUpLink">这里</a>!
@@ -58,24 +58,30 @@
                     <fieldset class="uk-fieldset">
                         <legend class="uk-legend">注册</legend>
                         <div class="uk-margin">
-                            <input class="uk-input" type="text" placeholder="用户名"/>
+                            <input id="signUpUsername" class="uk-input" type="text" placeholder="用户名（6~14个字符）"/>
                         </div>
                         <div class="uk-margin">
-                            <input class="uk-input" type="password" placeholder="密码"/>
+                            <input id="signUpPhone" class="uk-input" type="text" placeholder="手机号"/>
                         </div>
                         <div class="uk-margin">
-                            <input class="uk-input" type="text" placeholder="确认密码"/>
+                            <input id="signUpNickname" class="uk-input" type="text" placeholder="昵称（1~12个字符）"/>
+                        </div>
+                        <div class="uk-margin">
+                            <input id="signUpPassword" class="uk-input" type="password" placeholder="密码"/>
+                        </div>
+                        <div class="uk-margin">
+                            <input id="signUpPasswordEnsure" class="uk-input" type="password" placeholder="确认密码"/>
                         </div>
                         <div class="uk-margin">
                             <h3>我...</h3>
                             <div class="uk-margin">
-                                <label><input class="uk-radio" type="radio" name="role"/> 技术好，想拍别人</label>
+                                <label><input class="uk-radio" type="radio" name="role" checked="checked" value="p"/> 技术好，想拍别人</label>
                             </div>
                             <div class="uk-margin">
-                                <label class="uk-margin"><input class="uk-radio" type="radio" name="role"/> 长的好看，想被拍</label>
+                                <label class="uk-margin"><input class="uk-radio" type="radio" name="role" value="m"/> 长的好看，想被拍</label>
                             </div>
                         </div>
-                        <button id="signUpBtn" class="uk-form-width-medium uk-button-default uk-button-large">注册</button>
+                        <button id="signUpBtn" class="uk-form-width-medium uk-button-default uk-button">注册</button>
                         <div class="uk-margin">
                             回到<a id="toSignInLink">登录</a>
                         </div>
@@ -121,19 +127,99 @@
                 liArr[counter].className = 'uk-active';
             }
 
-
             $('#signInBtn').click(function () {
-                window.location.href = 'html/home.html';
+                let username = $('#signInUsername').val();
+                let password = $('#signInPassword').val();
+                if (username === ''){
+                    notification('未输入用户名！','danger');
+                }
+                else if(password === ''){
+                    notification('未输入密码！','danger');
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/SignIn.php',
+                        dataType: 'json',
+                        data: {
+                            'username': username,
+                            'password': password
+                        },
+                        success: function (data) {
+                            if(data.code === 200){
+                                window.location.href = 'html/today.html';
+                            }
+                            else {
+                                notification(data.msg, 'danger');
+                            }
+                        },
+                        error: function (code) {
+                            console.log(code);
+                        }
+                    });
+                }
                 return false;
-//                $.ajax({
-//                    type: 'POST',
-//                    url: 'php/signIn.php',
-//                    dataType: 'json',
-//                    data: {'username': $('#signInUsername').val(), 'password': $('#signInPassword').val()},
-//                    success: function (data) {
-//
-//                    }
-//                });
+            });
+
+            $('#signUpBtn').click(function () {
+                let username = $('#signUpUsername').val();
+                let phone = $('#signUpPhone').val();
+                let nickname = $('#signUpNickname').val();
+                let password = $('#signUpPassword').val();
+                let passwordEnsure = $('#signUpPasswordEnsure').val();
+                if (username === ''){
+                    notification("用户名不能为空!", 'danger');
+                }
+                else if(username.length < 6 || username.length > 14){
+                    notification("用户名长度需在6~14个字符之间!", 'danger');
+                }
+                else if(phone === ''){
+                    notification("手机号不能为空!",'danger');
+                }
+                else if(phone.length !== 11){
+                    notification("无效的手机号!",'danger');
+                }
+                else if(nickname === ''){
+                    notification("昵称不能为空!",'danger');
+                }
+                else if(nickname.length < 1 || nickname.length > 12){
+                    notification("昵称长度需在1~12个字符之间!",'danger');
+                }
+                else if(password === ''){
+                    notification("密码不能为空!",'danger');
+                }
+                else if(!(password === passwordEnsure)){
+                    notification("两次输入密码不一致!",'danger');
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/SignUp.php',
+                        dataType:'json',
+                        data: {
+                            'username': username,
+                            'password': password,
+                            'phone': phone,
+                            'nickname': nickname,
+                            'role': $('input[name="role"][checked]').val(),
+                        },
+                        success: function (data) {
+                            if (data.code === 200) {
+                                notification(data.msg, 'success');
+                                setTimeout(function () {
+                                    window.location.href = 'html/today.html';
+                                },2000);
+                            }
+                            else{
+                                notification(data.msg,'danger');
+                            }
+                        },
+                        error: function (code) {
+                            console.log(code);
+                        }
+                    });
+                }
+                return false;
             });
 
             $('#signUpForm').hide();
@@ -146,9 +232,12 @@
             $('#toSignInLink').click(function () {
                 $('#signInForm').show(500);
                 $('#signUpForm').hide(500);
-            })
+            });
 
 
+            function notification(msg, type) {
+                UIkit.notification(msg, {status: type, timeout: 2000});
+            }
         });
 
     </script>

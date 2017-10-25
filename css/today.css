@@ -17,10 +17,26 @@
     padding: 15px;
 }
 
-#todayStarTotalLikes, #todayStarTotalComments {
+.like-badge{
     background: #f0506e;
 }
 
-footer div{
-  height: 100px;
+footer div {
+    height: 100px;
+}
+
+.top3-head-pic {
+    width: 150px;
+    height: 150px;
+}
+.top10-head-pic {
+    width: 90px;
+    height: 90px;
+}
+
+.top3-icon{
+    width: 80px;
+    height: 80px;
+    margin-top: 40px;
+    /*margin-bottom: 40px;*/
 }

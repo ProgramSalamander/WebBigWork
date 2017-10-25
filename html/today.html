@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>iPaiPai - 专注于约拍的网站</title>
+        <link rel="stylesheet" href="../css/uikit.min.css"/>
+        <link rel="stylesheet" href="../css/today.css"/>
+
+        <script src="../js/lib/jquery-3.2.1.min.js"></script>
+        <script src="../js/lib/uikit.min.js"></script>
+        <script src="../js/lib/uikit-icons.min.js"></script>
+        <script src="../js/cookie.js"></script>
+        <script src="../js/url.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="uk-background-secondary uk-light" uk-navbar uk-sticky>
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="today.html"><span class="uk-margin-small-right uk-icon"
+                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
+                </div>
+                <div class="uk-navbar-right">
+                    <div>
+                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
+                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
+                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                <input class="uk-search-input" type="search" placeholder="搜索用户/地区..." autofocus>
+                            </form>
+                        </div>
+                    </div>
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-active"><a href="">今日推荐</a></li>
+                        <li><a href="ground.html">四处逛逛</a></li>
+                        <li><a href="homepage.html">我的主页</a></li>
+                        <li><a href="messages.html">我的消息<span class="uk-badge">8</span></a></li>
+                        <li>
+                            <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
+                            <div class="uk-width-small uk-navbar-dropdown">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                    <li><a href=""><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <section id="todayHot" class="uk-panel uk-position-relative uk-padding uk-clearfix">
+                <h2 class="uk-position-relative uk-position-top-center">今日热门</h2>
+                <div class="uk-grid-small uk-child-width-1-2@s uk-child-width-1-4@m" uk-grid>
+                    <div id="column1" class="uk-float-left">
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img class="uk-transition-scale-up uk-transition-opaque"
+                                                                         src="../imgs/index/bg1.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img class="uk-transition-scale-up uk-transition-opaque"
+                                                                         src="../imgs/index/bg2.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="column2" class="uk-float-left">
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img
+                                            class="uk-responsive-width uk-responsive-height uk-transition-scale-up uk-transition-opaque"
+                                            src="../imgs/girl1.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="column3" class="uk-float-left">
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img class="uk-transition-scale-up uk-transition-opaque"
+                                                                         src="../imgs/index/bg1.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img class="uk-transition-scale-up uk-transition-opaque"
+                                                                         src="../imgs/index/bg1.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="column4" class="uk-float-left">
+                        <div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">
+                            <div class="uk-card-body uk-padding-small" uk-lightbox>
+                                <div class="uk-inline-clip uk-transition-toggle">
+                                    <a href="../imgs/index/bg1.jpg"><img class="uk-transition-scale-up uk-transition-opaque"
+                                                                         src="../imgs/index/bg3.jpg"></a>
+                                </div>
+                            </div>
+                            <div class="uk-card-footer uk-clearfix">
+                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>徐杨晨</a>
+                                <div class="uk-float-right">
+                                    <a href="" class="uk-icon-link" uk-icon="icon:heart" title="喜欢" uk-tooltip></a><a
+                                        href="" class="uk-margin-left uk-icon-link" uk-icon="icon:commenting" title="评论" uk-tooltip></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <hr class="uk-divider-icon"/>
+            <section id="todayStar" class="uk-container uk-padding uk-padding-remove-top">
+                <h2 class="uk-position-relative uk-position-top-center">今日明星</h2>
+                <div class="uk-grid uk-grid-divider uk-padding uk-padding-remove-top uk-padding-remove-bottom uk-padding-remove-left uk-text-center" uk-grid>
+                    <div class="uk-grid uk-width-expand uk-child-width-1-3 uk-margin-right" uk-grid>
+                        <div class="">
+                            <div class="uk-position-relative uk-position-center">
+                                <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                    <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
+                                </div>
+                                <p>徐杨晨</p>
+                                <p>今日获得喜欢总数：<span class="uk-badge like-badge">1024</span></p>
+                                <img class="top3-icon" src="../imgs/today/star_first.png"/>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="uk-position-relative uk-position-center">
+                                <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                    <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
+                                </div>
+                                <p>徐梓航</p>
+                                <p>今日获得喜欢总数：<span class="uk-badge like-badge">512</span></p>
+                                <img class="top3-icon" src="../imgs/today/star_second.png"/>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="uk-position-relative uk-position-center">
+                                <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                    <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
+                                </div>
+                                <p>薛恺丰</p>
+                                <p>今日获得喜欢总数：<span class="uk-badge like-badge">256</span></p>
+                                <img class="top3-icon" src="../imgs/today/star_third.png"/>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-width-1-3 uk-child-width-1-2" uk-grid>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢一德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢二德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢三德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢四德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢五德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+                        <div>
+                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top10-head-pic" src="../imgs/index/bg4.jpg"/>
+                            </div>
+                            <p>鄢六德 <span class="uk-badge like-badge">128</span></p>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </section>
+        </main>
+        <footer>
+            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
+            </div>
+        </footer>
+    </body>
+</html>
