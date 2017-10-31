@@ -1,0 +1,36 @@
+.side-bar{
+    width: 300px;
+    position: fixed;
+    top: 80px;
+    bottom: 0;
+    border-right: 1px solid #eeeeee;
+}
+
+.side-bar ul li a{
+    font-size: large;
+    text-align: center;
+}
+
+.friend-head-pic{
+    width: 80px;
+    height: 80px;
+    vertical-align: middle;
+}
+
+.friend-news-photo{
+    width: 600px;
+    height: 400px;
+    padding: 10px;
+}
+
+.friends-news-list li{
+
+}
+.friends-news-list li a{
+    width: 700px;
+    text-decoration: none;
+    transition: 1s;
+}
+.friends-news-list li a p{
+    color: #222222;
+}
