@@ -5,6 +5,7 @@
         <title>iPaiPai - 专注于约拍的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" type="text/css" href="../css/today.css">
+        <link rel="stylesheet" type="text/css" href="../css/friends.css">
         <link rel="stylesheet" type="text/css" href="../css/homepage.css">
 
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
@@ -35,7 +36,7 @@
                             <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
+                                    <li><a href="myPage.html"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
                                     <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
                                     <li><a href=""><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
@@ -101,6 +102,72 @@
                 </div>
                 <div class="uk-margin-top uk-text-center">
                     <button class="uk-button uk-button-text">查看更多相册</button>
+                </div>
+            </section>
+            <section class="uk-padding uk-padding-remove-top">
+                <h3>动态</h3>
+                <div class="friends-news-container uk-flex uk-flex-center">
+                    <ul class="uk-list uk-list-divider friends-news-list">
+                        <li class="uk-position-relative">
+                            <div uk-grid>
+                                <div class="uk-width-auto uk-align-center">
+                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
+                                </div>
+                                <div class="uk-width-expand uk-align-center">
+                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
+                                </div>
+                                <div class="uk-width-auto uk-align-center">
+                                    <span class="uk-text-muted uk-text-small">19:17</span>
+                                </div>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <div class="uk-card uk-card-default ">
+                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
+                                </div>
+                            </div>
+                            <div class="uk-margin uk-text-right">
+                                <a class="uk-display-inline uk-icon-link uk-margin-right" uk-icon="icon: heart" title="喜欢" uk-tooltip></a>
+                                <a class="uk-display-inline uk-icon-link uk-margin-right" uk-icon="icon: commenting" title="评论" uk-tooltip></a>
+                                <a class="uk-display-inline uk-icon-link" uk-icon="icon: forward" title="转发" uk-tooltip></a>
+                            </div>
+                        </li>
+                        <li>
+                            <div uk-grid>
+                                <div class="uk-width-auto uk-align-center">
+                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
+                                </div>
+                                <div class="uk-width-expand uk-align-center">
+                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
+                                </div>
+                                <div class="uk-width-auto uk-align-center">
+                                    <span class="uk-text-muted uk-text-small">19:17</span>
+                                </div>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <div class="uk-card uk-card-default ">
+                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div uk-grid>
+                                <div class="uk-width-auto uk-align-center">
+                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
+                                </div>
+                                <div class="uk-width-expand uk-align-center">
+                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
+                                </div>
+                                <div class="uk-width-auto uk-align-center">
+                                    <span class="uk-text-muted uk-text-small">19:17</span>
+                                </div>
+                            </div>
+                            <div class="uk-flex uk-flex-center">
+                                <div class="uk-card uk-card-default ">
+                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </section>
         </main>

@@ -10,8 +10,9 @@
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
         <script src="../js/lib/uikit.min.js"></script>
         <script src="../js/lib/uikit-icons.min.js"></script>
-        <script src="../js/cookie.js"></script>
-        <script src="../js/url.js"></script>
+        <script src="../js/util/cookie.js"></script>
+        <script src="../js/util/url.js"></script>
+        <script src="../js/util/notification.js"></script>
     </head>
     <body>
         <header>
@@ -50,72 +51,19 @@
         <main>
             <div class="uk-section side-bar">
                 <ul class="uk-nav uk-nav-default">
-                    <li>
+                    <li class="uk-active">
                         <a class="uk-active" href="">好友动态</a>
                     </li>
                     <li>
                         <a href="">热门动态</a>
                     </li>
+                    <li>
+                        <a href="">我的动态</a>
+                    </li>
                 </ul>
             </div>
-            <section class="uk-section">
-                <div class="friends-news-container uk-flex uk-flex-center">
-                    <ul class="uk-list uk-list-divider friends-news-list">
-                        <li>
-                            <div uk-grid>
-                                <div class="uk-width-auto uk-align-center">
-                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
-                                </div>
-                                <div class="uk-width-expand uk-align-center">
-                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
-                                </div>
-                                <div class="uk-width-auto uk-align-center">
-                                    <span class="uk-text-muted uk-text-small">19:17</span>
-                                </div>
-                            </div>
-                            <div class="uk-flex uk-flex-center">
-                                <div class="uk-card uk-card-default ">
-                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div uk-grid>
-                                <div class="uk-width-auto uk-align-center">
-                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
-                                </div>
-                                <div class="uk-width-expand uk-align-center">
-                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
-                                </div>
-                                <div class="uk-width-auto uk-align-center">
-                                    <span class="uk-text-muted uk-text-small">19:17</span>
-                                </div>
-                            </div>
-                            <div class="uk-flex uk-flex-center">
-                                <div class="uk-card uk-card-default ">
-                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div uk-grid>
-                                <div class="uk-width-auto uk-align-center">
-                                    <img class="uk-border-circle friend-head-pic" src="../imgs/girl1.jpg"/>
-                                </div>
-                                <div class="uk-width-expand uk-align-center">
-                                    <p class="uk-width-large"><span class="uk-text-success">徐杨晨</span>添加了新照片:</p>
-                                </div>
-                                <div class="uk-width-auto uk-align-center">
-                                    <span class="uk-text-muted uk-text-small">19:17</span>
-                                </div>
-                            </div>
-                            <div class="uk-flex uk-flex-center">
-                                <div class="uk-card uk-card-default ">
-                                    <img class="friend-news-photo" src="../imgs/index/bg1.jpg"/>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+            <section>
+                <div id="friendsNewsContainer" class="uk-flex uk-flex-center">
                 </div>
             </section>
         </main>
@@ -125,4 +73,78 @@
             <!--</div>-->
         </footer>
     </body>
+    <script src="../js/component/friendNews.js"></script>
+    <script>
+        $('document').ready(function () {
+            let newsData = [{
+                friendHeadPicUrl: '../imgs/index/bg4.jpg',
+                friendHomePageUrl: 'hisPage.html',
+                friendName: '徐杨晨',
+                friendNewsContent: '这张照片好看吗？',
+                friendNewsTime: '20:19',
+                friendNewsPhotos: ['../imgs/index/bg1.jpg',
+                    '../imgs/index/bg2.jpg',
+                    '../imgs/index/bg3.jpg',
+                    '../imgs/index/bg4.jpg'],
+                friendNewsLikes: '10',
+                friendNewsIsLiked: false,
+                commentData: [{
+                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
+                    commentUsername: '徐梓航',
+                    commentContent: '好看！',
+                    commentTime: '20:30'
+                }, {
+                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
+                    commentUsername: '鄢巴德',
+                    commentContent: '不好看！',
+                    commentTime: '20:40'
+                }]
+            },{
+                friendHeadPicUrl: '../imgs/index/bg4.jpg',
+                friendHomePageUrl: 'hisPage.html',
+                friendName: '徐杨晨',
+                friendNewsContent: '这张照片好看吗？',
+                friendNewsTime: '20:19',
+                friendNewsPhotos: ['../imgs/index/bg1.jpg',
+                    '../imgs/index/bg2.jpg',
+                    '../imgs/index/bg3.jpg',
+                    '../imgs/index/bg4.jpg'],
+                friendNewsLikes: '10',
+                friendNewsIsLiked: false,
+                commentData: [{
+                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
+                    commentUsername: '徐梓航',
+                    commentContent: '好看！',
+                    commentTime: '20:30'
+                }, {
+                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
+                    commentUsername: '鄢巴德',
+                    commentContent: '不好看！',
+                    commentTime: '20:40'
+                }]
+            },{
+                friendHeadPicUrl: '../imgs/index/bg4.jpg',
+                friendHomePageUrl: 'hisPage.html',
+                friendName: '徐杨晨',
+                friendNewsContent: '这张照片好看吗？',
+                friendNewsTime: '20:19',
+                friendNewsPhotos: ['../imgs/index/bg1.jpg'],
+                friendNewsLikes: '10',
+                friendNewsIsLiked: false,
+                commentData: [{
+                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
+                    commentUsername: '徐梓航',
+                    commentContent: '好看！',
+                    commentTime: '20:30'
+                }, {
+                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
+                    commentUsername: '鄢巴德',
+                    commentContent: '不好看！',
+                    commentTime: '20:40'
+                }]
+            }];
+            let friendNews = new FriendNews(newsData);
+            $('#friendsNewsContainer').append(friendNews.render());
+        });
+    </script>
 </html>

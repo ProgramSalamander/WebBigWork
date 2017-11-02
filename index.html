@@ -9,8 +9,9 @@
         <script src="js/lib/jquery-3.2.1.min.js"></script>
         <script src="js/lib/uikit.min.js"></script>
         <script src="js/lib/uikit-icons.min.js"></script>
-        <script src="js/cookie.js"></script>
-        <script src="js/url.js"></script>
+        <script src="js/util/cookie.js"></script>
+        <script src="js/util/url.js"></script>
+        <script src="js/util/notification.js"></script>
     </head>
     <body class="uk-background-cover uk-position-relative uk-offcanvas-content">
         <div class="uk-position-center">
@@ -100,7 +101,7 @@
                 '../imgs/index/bg6.jpg'];
             let liArr = $('.uk-dotnav li');
 
-            let counter = 0;
+            let counter = 0;    
 
             let timer = setInterval(function () {
                 changeBgImg(counter);
@@ -148,6 +149,7 @@
                         success: function (data) {
                             if(data.code === 200){
                                 window.location.href = 'html/today.html';
+                                setCookie('user_name', username);
                             }
                             else {
                                 notification(data.msg, 'danger');
@@ -235,9 +237,7 @@
             });
 
 
-            function notification(msg, type) {
-                UIkit.notification(msg, {status: type, timeout: 2000});
-            }
+
         });
 
     </script>
