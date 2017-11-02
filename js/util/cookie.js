@@ -18,7 +18,7 @@ function setCookie(key,value,t) {
 function getCookie(key) {
     let arr1 = document.cookie.split('; ');
     for (let i = 0; i < arr1.length; i++){
-        let arr2 = arr1[1].split('=');
+        let arr2 = arr1[i].split('=');
         if(arr2[0] === key){
             return decodeURI(arr2[1]);
         }

@@ -10,7 +10,6 @@
         <script src="js/lib/uikit.min.js"></script>
         <script src="js/lib/uikit-icons.min.js"></script>
         <script src="js/util/cookie.js"></script>
-        <script src="js/util/url.js"></script>
         <script src="js/util/notification.js"></script>
     </head>
     <body class="uk-background-cover uk-position-relative uk-offcanvas-content">
@@ -149,7 +148,7 @@
                         success: function (data) {
                             if(data.code === 200){
                                 window.location.href = 'html/today.html';
-                                setCookie('user_name', username);
+                                setCookie('username', encodeURI(username), 7);
                             }
                             else {
                                 notification(data.msg, 'danger');
@@ -208,6 +207,7 @@
                         success: function (data) {
                             if (data.code === 200) {
                                 notification(data.msg, 'success');
+                                setCookie('username', encodeURI(username), 7);
                                 setTimeout(function () {
                                     window.location.href = 'html/today.html';
                                 },2000);

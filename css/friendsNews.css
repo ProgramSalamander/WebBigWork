@@ -1,5 +1,5 @@
 .side-bar {
-    width: 300px;
+    width: 22%;
     position: fixed;
     top: 80px;
     bottom: 0;
@@ -76,4 +76,19 @@
 
 #friendsNewsContainer{
     padding-top: 30px;
+}
+
+.friends-list-container{
+    width: 20%;
+    position: fixed;
+    top: 80px;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+    /*background: pink;*/
+}
+
+.friends-list img{
+    width: 60px;
+    height: 60px;
 }

@@ -8,7 +8,7 @@ class FriendNews {
         let newsList = $('<ul></ul>').addClass('uk-list uk-list-divider friends-news-list');
         for (let i = 0; i < this.data.length; i++) {
             let newsData = this.data[i];
-            let news = $('<li></li>').addClass('friends-news').html(`<div class="uk-grid friend-news-header" uk-grid>\
+            let news = $('<li></li>').addClass('friends-news').html(`<div class="uk-grid-small friend-news-header" uk-grid>\
                                 <div class="uk-width-auto uk-align-center">\
                                     <img class="uk-border-circle friend-head-pic" src="${newsData.friendHeadPicUrl}"/>\
                                 </div>\

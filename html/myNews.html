@@ -5,13 +5,13 @@
         <title>iPaiPai - 专注于约拍的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" href="../css/today.css"/>
-        <link rel="stylesheet" href="../css/friends.css"/>
+        <link rel="stylesheet" href="../css/friendsNews.css"/>
 
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
         <script src="../js/lib/uikit.min.js"></script>
         <script src="../js/lib/uikit-icons.min.js"></script>
+        <script src="../js/lib/URI.min.js"></script>
         <script src="../js/util/cookie.js"></script>
-        <script src="../js/util/url.js"></script>
         <script src="../js/util/notification.js"></script>
     </head>
     <body>
@@ -26,16 +26,16 @@
                         <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
                         <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
                             <form class="uk-search uk-search-navbar uk-width-1-1">
-                                <input class="uk-search-input" type="search" placeholder="搜索用户/地区..." autofocus>
+                                <input class="uk-search-input" type="search" placeholder="搜索用户/标签..." autofocus>
                             </form>
                         </div>
                     </div>
                     <ul class="uk-navbar-nav">
                         <li><a href="today.html">今日推荐</a></li>
                         <li><a href="ground.html">四处逛逛</a></li>
-                        <li class="uk-active"><a href="friends.html">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li class="uk-active"><a href="friendsNews.html">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
+                            <a href=""><img class="uk-border-circle" id="headPic" src="../../../imgs/index/bg1.jpg"/></a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
                                     <li><a href="myPage.html"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
@@ -49,16 +49,16 @@
             </nav>
         </header>
         <main>
-            <div class="uk-section side-bar">
+            <div class="uk-section side-bar uk-visible@l">
                 <ul class="uk-nav uk-nav-default">
+                    <li>
+                        <a href="friendsNews.html">好友动态</a>
+                    </li>
                     <li class="uk-active">
-                        <a class="uk-active" href="">好友动态</a>
-                    </li>
-                    <li>
-                        <a href="">热门动态</a>
-                    </li>
-                    <li>
                         <a href="">我的动态</a>
+                    </li>
+                    <li>
+                        <a href="friendsManage.html">好友管理</a>
                     </li>
                 </ul>
             </div>
@@ -67,15 +67,16 @@
                 </div>
             </section>
         </main>
-        <footer>
-            <!--<div class="uk-background-secondary uk-light uk-text-center uk-position-relative">-->
-            <!--<p class="uk-position-center">©2017 Xyc. All rights reserved.</p>-->
-            <!--</div>-->
+        <footer style="display: none">
+            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
+            </div>
         </footer>
     </body>
     <script src="../js/component/friendNews.js"></script>
     <script>
         $('document').ready(function () {
+
             let newsData = [{
                 friendHeadPicUrl: '../imgs/index/bg4.jpg',
                 friendHomePageUrl: 'hisPage.html',
@@ -99,7 +100,7 @@
                     commentContent: '不好看！',
                     commentTime: '20:40'
                 }]
-            },{
+            }, {
                 friendHeadPicUrl: '../imgs/index/bg4.jpg',
                 friendHomePageUrl: 'hisPage.html',
                 friendName: '徐杨晨',
@@ -122,7 +123,7 @@
                     commentContent: '不好看！',
                     commentTime: '20:40'
                 }]
-            },{
+            }, {
                 friendHeadPicUrl: '../imgs/index/bg4.jpg',
                 friendHomePageUrl: 'hisPage.html',
                 friendName: '徐杨晨',
@@ -145,6 +146,9 @@
             }];
             let friendNews = new FriendNews(newsData);
             $('#friendsNewsContainer').append(friendNews.render());
+
+            $('footer').show();
+
         });
     </script>
 </html>
