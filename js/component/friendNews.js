@@ -93,8 +93,12 @@ class FriendNews {
 
             myComment.find('a').first().click(function () {
                 let content = myComment.find('input').first().val();
-                let date = new Date();
-                let comment = $('<li></li>').html(`<div class="uk-grid-small friend-news-comment-body" uk-grid>\
+                if (content === ''){
+                    notification('评论不能为空哦','warning');
+                }
+                else {
+                    let date = new Date();
+                    let comment = $('<li></li>').html(`<div class="uk-grid-small friend-news-comment-body" uk-grid>\
                                         <div class="uk-width-auto">\
                                             <img class="friend-news-comment-head-pic uk-border-circle" src="../../imgs/index/bg2.jpg"/>\
                                         </div>\
@@ -106,9 +110,10 @@ class FriendNews {
                                             <span class="friend-news-comment-time uk-text-meta">${date.getHours() + ":" + date.getMinutes()}</span>\
                                         </div>\
                                      </div>`);
-                commentList.append(comment);
-                notification('评论成功！', 'success');
-                myComment.hide();
+                    commentList.append(comment);
+                    notification('评论成功！', 'success');
+                    myComment.hide();
+                }
             });
 
             for (let i = 0; i < commentData.length; i++) {

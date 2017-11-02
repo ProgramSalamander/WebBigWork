@@ -55,7 +55,7 @@
                         <a href="">好友动态</a>
                     </li>
                     <li>
-                        <a id="myNewsLink" href="myNews.html">我的动态</a>
+                        <a href="myNews.html">我的动态</a>
                     </li>
                     <li>
                         <a href="friendsManage.html">好友管理</a>
@@ -81,8 +81,6 @@
     <script src="../js/component/friendNews.js"></script>
     <script>
         $('document').ready(function () {
-
-            $('#myNewsLink').attr('href',new URI('myNews.html').query({friendName: getCookie('username')}));
 
             let newsData = [{
                 friendHeadPicUrl: '../imgs/index/bg4.jpg',
