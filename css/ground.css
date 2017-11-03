@@ -1,0 +1,10 @@
+.ground-filter li{
+    width: 150px;
+}
+.ground-filter li a{
+    padding: 10px;
+    text-align: center;
+}
+.ground-container{
+    width: 1220px;
+}
