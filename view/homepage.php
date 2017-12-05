@@ -4,7 +4,16 @@ require_once '../php/util.php';
 session_start();
 checkSignIn();
 
-$headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+$myHeadPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+$myUsername = $_COOKIE['username'];
+
+$homepageUsername = $_GET['username'];
+try {
+    $db = getDB();
+    $ret = $db->query();
+} catch (Exception $e) {
+
+}
 ?>
 <html lang="zh">
     <head>
@@ -37,7 +46,7 @@ $headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
             });
 
             function myPageMode() {
-                $('#homePageHeadPic').attr('src', '<?php echo $headPicUrl ?>');
+                $('#homePageHeadPic').attr('src', '<?php echo $myHeadPicUrl ?>');
 
                 initEditInfo($('#editNicknameContainer'),$('#saveNicknameContainer'));
                 initEditInfo($('#editSignContainer'),$('#saveSignContainer'));
@@ -146,13 +155,13 @@ $headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
                         <li>
                             <a id="myHeadPic" href="">
                                 <script>
-                                    $('#myHeadPic').prepend(new MyHeadPic('<?php echo $headPicUrl?>', 50).render());
+                                    $('#myHeadPic').prepend(new MyHeadPic('<?php echo $myHeadPicUrl?>', 50).render());
                                 </script>
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="homepage.php"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
+                                    <li><a href="homepage.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
+                                    <li><a href="album.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
                                     <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
                             </div>
@@ -166,7 +175,7 @@ $headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
                 <div uk-grid>
                     <div class="uk-width-expand">
                         <div style="overflow: hidden; position: relative" class="uk-margin-top uk-align-left uk-width-small uk-height-small uk-border-circle">
-                            <img id="homePageHeadPic" class="photo-high"/>
+                            <img id="homePageHeadPic" class="photo-high" src="<?php  ?>"/>
                         </div>
                         <h2 id="editNicknameContainer" class="uk-article-title"><span>路飞</span>
                             <a id="editNicknameBtn" class="uk-icon" uk-icon="icon:file-edit" title="修改昵称" uk-tooltip></a>
