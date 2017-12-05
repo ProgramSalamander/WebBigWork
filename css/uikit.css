@@ -5516,7 +5516,7 @@ ul.uk-nav-sub {
  ========================================================================== */
 /*
  * Prevent horizontal scrollbar when the content is slide-out
- * Has to be on the `html` element too to make it work on the `body`
+ * Has to be on the `view` element too to make it work on the `body`
  */
 .uk-offcanvas-page,
 .uk-offcanvas-container {

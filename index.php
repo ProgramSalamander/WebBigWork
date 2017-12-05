@@ -1,5 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require_once 'php/user.php';
+session_start();
+if (!empty($_COOKIE['username'])){
+    header("location: view/today.php");
+}
+?>
+<html lang="zh">
     <head>
         <meta charset="UTF-8">
         <title>iPaiPai - 专注于约拍的网站</title>
@@ -9,15 +15,18 @@
         <script src="js/lib/jquery-3.2.1.min.js"></script>
         <script src="js/lib/uikit.min.js"></script>
         <script src="js/lib/uikit-icons.min.js"></script>
-        <script src="js/util/cookie.js"></script>
+        <script src="js/lib/URI.min.js"></script>
         <script src="js/util/notification.js"></script>
+
     </head>
     <body class="uk-background-cover uk-position-relative uk-offcanvas-content">
         <div class="uk-position-center">
             <h1 class="uk-heading-primary uk-text-bold uk-margin-medium-bottom uk-text-center uk-flex-middle uk-animation-slide-top"> 嗨！爱拍吗</h1>
             <div class="uk-width-auto">
                 <div class="uk-position-bottom-center uk-position-relative">
-                    <button class="uk-button-large uk-button-secondary uk-animation-slide-bottom" uk-toggle="target: #signCanvas"> 进去看看!</button>
+                    <button class="uk-button-large uk-button-secondary uk-animation-slide-bottom" uk-toggle="target: #signCanvas">
+                        进去看看!
+                    </button>
                 </div>
             </div>
         </div>
@@ -72,15 +81,6 @@
                         <div class="uk-margin">
                             <input id="signUpPasswordEnsure" class="uk-input" type="password" placeholder="确认密码"/>
                         </div>
-                        <div class="uk-margin">
-                            <h3>我...</h3>
-                            <div class="uk-margin">
-                                <label><input class="uk-radio" type="radio" name="role" checked="checked" value="p"/> 技术好，想拍别人</label>
-                            </div>
-                            <div class="uk-margin">
-                                <label class="uk-margin"><input class="uk-radio" type="radio" name="role" value="m"/> 长的好看，想被拍</label>
-                            </div>
-                        </div>
                         <button id="signUpBtn" class="uk-form-width-medium uk-button-default uk-button">注册</button>
                         <div class="uk-margin">
                             回到<a id="toSignInLink">登录</a>
@@ -92,6 +92,7 @@
     </body>
     <script>
         $('document').ready(function () {
+
             let imgPathArr = ['../imgs/index/bg1.jpg',
                 '../imgs/index/bg2.jpg',
                 '../imgs/index/bg3.jpg',
@@ -100,7 +101,7 @@
                 '../imgs/index/bg6.jpg'];
             let liArr = $('.uk-dotnav li');
 
-            let counter = 0;    
+            let counter = 0;
 
             let timer = setInterval(function () {
                 changeBgImg(counter);
@@ -130,32 +131,31 @@
             $('#signInBtn').click(function () {
                 let username = $('#signInUsername').val();
                 let password = $('#signInPassword').val();
-                if (username === ''){
-                    notification('未输入用户名！','danger');
+                if (username === '') {
+                    notification('未输入用户名！', 'danger');
                 }
-                else if(password === ''){
-                    notification('未输入密码！','danger');
+                else if (password === '') {
+                    notification('未输入密码！', 'danger');
                 }
                 else {
                     $.ajax({
                         type: 'POST',
-                        url: 'php/SignIn.php',
+                        url: 'php/signIn.php',
                         dataType: 'json',
                         data: {
                             'username': username,
                             'password': password
                         },
                         success: function (data) {
-                            if(data.code === 200){
-                                window.location.href = 'html/today.html';
-                                setCookie('username', encodeURI(username), 7);
+                            if (data.code === 200) {
+                                window.location.href = 'view/today.php';
                             }
                             else {
                                 notification(data.msg, 'danger');
                             }
                         },
-                        error: function (code) {
-                            console.log(code);
+                        error: function () {
+                            notification('网络异常，请检查网络后重试。','warning')
                         }
                     });
                 }
@@ -168,56 +168,54 @@
                 let nickname = $('#signUpNickname').val();
                 let password = $('#signUpPassword').val();
                 let passwordEnsure = $('#signUpPasswordEnsure').val();
-                if (username === ''){
+                if (username === '') {
                     notification("用户名不能为空!", 'danger');
                 }
-                else if(username.length < 6 || username.length > 14){
+                else if (username.length < 6 || username.length > 14) {
                     notification("用户名长度需在6~14个字符之间!", 'danger');
                 }
-                else if(phone === ''){
-                    notification("手机号不能为空!",'danger');
+                else if (phone === '') {
+                    notification("手机号不能为空!", 'danger');
                 }
-                else if(phone.length !== 11){
-                    notification("无效的手机号!",'danger');
+                else if (phone.length !== 11) {
+                    notification("无效的手机号!", 'danger');
                 }
-                else if(nickname === ''){
-                    notification("昵称不能为空!",'danger');
+                else if (nickname === '') {
+                    notification("昵称不能为空!", 'danger');
                 }
-                else if(nickname.length < 1 || nickname.length > 12){
-                    notification("昵称长度需在1~12个字符之间!",'danger');
+                else if (nickname.length < 1 || nickname.length > 12) {
+                    notification("昵称长度需在1~12个字符之间!", 'danger');
                 }
-                else if(password === ''){
-                    notification("密码不能为空!",'danger');
+                else if (password === '') {
+                    notification("密码不能为空!", 'danger');
                 }
-                else if(!(password === passwordEnsure)){
-                    notification("两次输入密码不一致!",'danger');
+                else if (!(password === passwordEnsure)) {
+                    notification("两次输入密码不一致!", 'danger');
                 }
                 else {
                     $.ajax({
                         type: 'POST',
-                        url: 'php/SignUp.php',
-                        dataType:'json',
+                        url: 'php/signUp.php',
+                        dataType: 'json',
                         data: {
                             'username': username,
                             'password': password,
                             'phone': phone,
-                            'nickname': nickname,
-                            'role': $('input[name="role"][checked]').val(),
+                            'nickname': nickname
                         },
                         success: function (data) {
                             if (data.code === 200) {
                                 notification(data.msg, 'success');
-                                setCookie('username', encodeURI(username), 7);
                                 setTimeout(function () {
-                                    window.location.href = 'html/today.html';
-                                },2000);
+                                    window.location.href = 'view/today.php';
+                                }, 1000);
                             }
-                            else{
-                                notification(data.msg,'danger');
+                            else {
+                                notification(data.msg, 'danger');
                             }
                         },
-                        error: function (code) {
-                            console.log(code);
+                        error: function () {
+                            notification('网络异常，请检查网络后重试。','warning')
                         }
                     });
                 }
@@ -235,7 +233,6 @@
                 $('#signInForm').show(500);
                 $('#signUpForm').hide(500);
             });
-
 
 
         });

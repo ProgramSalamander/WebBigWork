@@ -22,8 +22,7 @@ function getDB(){
     $db = new MyDB();
 
     if (!$db){
-        throw new Exception("数据库异常");
+        throw new Exception($db->lastErrorMsg());
     }
     return $db;
 }
-

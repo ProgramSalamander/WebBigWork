@@ -1,18 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+require_once '../php/user.php';
+require_once '../php/util.php';
+session_start();
+checkSignIn();
+
+$headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+?>
+<html lang="zh">
     <head>
         <meta charset="UTF-8">
         <title>iPaiPai - 专注于约拍的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" type="text/css" href="../css/today.css">
         <link rel="stylesheet" type="text/css" href="../css/ground.css">
+        <link rel="stylesheet" type="text/css" href="../css/photo.css">
 
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
         <script src="../js/lib/uikit.min.js"></script>
         <script src="../js/lib/uikit-icons.min.js"></script>
         <script src="../js/lib/URI.min.js"></script>
         <script src="../js/util/labels.js"></script>
+        <script src="../js/util/imageHelper.js"></script>
         <script src="../js/component/photoCard.js"></script>
+        <script src="../js/component/myHeadPic.js"></script>
 
         <script>
             $('document').ready(function () {
@@ -29,6 +39,7 @@
                         photoUrl: '../../imgs/index/bg1.jpg',
                         photoAuthor: '徐杨晨',
                         photoLabel: '人像',
+                        photoLabelClass: 'label-people'
                     },
                     {
                         photoUrl: '../../imgs/index/bg1.jpg',
@@ -230,8 +241,8 @@
         <header>
             <nav class="uk-background-secondary uk-light" uk-navbar uk-sticky>
                 <div class="uk-navbar-left">
-                    <a class="uk-navbar-item uk-logo" href="today.html"><span class="uk-margin-small-right uk-icon"
-                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
+                    <a class="uk-navbar-item uk-logo" href="today.php"><span class="uk-margin-small-right uk-icon"
+                                                                             uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
                     <div>
@@ -243,17 +254,21 @@
                         </div>
                     </div>
                     <ul class="uk-navbar-nav">
-                        <li><a href="today.html">今日推荐</a></li>
-                        <li><a href="activity.html">约拍</a></li>
+                        <li><a href="today.php">今日推荐</a></li>
+                        <li><a href="activity.php">约拍</a></li>
                         <li class="uk-active"><a href="">四处逛逛</a></li>
-                        <li><a href="friendsNews.html">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
+                            <a id="myHeadPic" href="">
+                                <script>
+                                    $('#myHeadPic').prepend(new MyHeadPic('<?php echo $headPicUrl?>', 50).render());
+                                </script>
+                            </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="myPage.html"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
+                                    <li><a href="homepage.php"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
                                     <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
+                                    <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
                             </div>
                         </li>

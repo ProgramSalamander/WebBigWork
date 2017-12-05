@@ -1,7 +1,3 @@
-#headPic {
-    width: 6vh;
-    height: 6vh;
-}
 
 .uk-navbar-dropdown {
     padding: 15px;
@@ -42,11 +38,11 @@ footer div {
     /*margin-bottom: 40px;*/
 }
 
-.uk-navbar-dropdown-nav li span{
+.uk-navbar-dropdown-nav li span {
     margin-right: 20px;
 }
 
-.uk-notification-message{
+.uk-notification-message {
     font-size: 1rem;
     text-align: center;
 }

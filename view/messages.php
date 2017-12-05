@@ -14,8 +14,8 @@
         <header>
             <nav class="uk-background-secondary uk-light" uk-navbar uk-sticky>
                 <div class="uk-navbar-left">
-                    <a class="uk-navbar-item uk-logo" href="../index.html"><span class="uk-margin-small-right uk-icon"
-                                                                                 uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
+                    <a class="uk-navbar-item uk-logo" href="../index.php"><span class="uk-margin-small-right uk-icon"
+                                                                                uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
                     <div>
@@ -27,9 +27,9 @@
                         </div>
                     </div>
                     <ul class="uk-navbar-nav">
-                        <li><a href="today.html">今日推荐</a></li>
-                        <li><a href="ground.html">四处逛逛</a></li>
-                        <li><a href="myPage.html">我的主页</a></li>
+                        <li><a href="today.php">今日推荐</a></li>
+                        <li><a href="ground.php">四处逛逛</a></li>
+                        <li><a href="homepage.php">我的主页</a></li>
                         <li class="uk-active"><a href="">我的消息<span class="uk-badge">8</span></a></li>
                         <li>
                             <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>

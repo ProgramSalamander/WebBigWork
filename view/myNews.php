@@ -18,8 +18,8 @@
         <header>
             <nav class="uk-background-secondary uk-light" uk-navbar uk-sticky>
                 <div class="uk-navbar-left">
-                    <a class="uk-navbar-item uk-logo" href="today.html"><span class="uk-margin-small-right uk-icon"
-                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
+                    <a class="uk-navbar-item uk-logo" href="today.php"><span class="uk-margin-small-right uk-icon"
+                                                                             uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
                     <div>
@@ -31,15 +31,15 @@
                         </div>
                     </div>
                     <ul class="uk-navbar-nav">
-                        <li><a href="today.html">今日推荐</a></li>
-                        <li><a href="activity.html">约拍</a></li>
-                        <li><a href="ground.html">四处逛逛</a></li>
-                        <li class="uk-active"><a href="friendsNews.html">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li><a href="today.php">今日推荐</a></li>
+                        <li><a href="activity.php">约拍</a></li>
+                        <li><a href="ground.php">四处逛逛</a></li>
+                        <li class="uk-active"><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a href=""><img class="uk-border-circle" id="headPic" src="../imgs/index/bg1.jpg"/></a>
+                            <a href=""><img class="uk-border-circle" id="headPic" src="../../../imgs/index/bg1.jpg"/></a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="myPage.html"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
+                                    <li><a href="homepage.php"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
                                     <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
                                     <li><a href=""><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
@@ -50,26 +50,21 @@
             </nav>
         </header>
         <main>
-            <section class="uk-section side-bar uk-visible@l">
+            <div class="uk-section side-bar uk-visible@l">
                 <ul class="uk-nav uk-nav-default">
+                    <li>
+                        <a href="friendsNews.php">好友动态</a>
+                    </li>
                     <li class="uk-active">
-                        <a href="">好友动态</a>
+                        <a href="">我的动态</a>
                     </li>
                     <li>
-                        <a href="myNews.html">我的动态</a>
-                    </li>
-                    <li>
-                        <a href="friendsManage.html">好友管理</a>
+                        <a href="friendsManage.php">好友管理</a>
                     </li>
                 </ul>
-            </section>
+            </div>
             <section>
                 <div id="friendsNewsContainer" class="uk-flex uk-flex-center">
-                </div>
-            </section>
-            <section class="uk-padding friends-list-container">
-                <h5>看看Ta的动态</h5>
-                <div class="uk-grid-small uk-margin-remove uk-child-width-1-3 friends-list" uk-grid>
                 </div>
             </section>
         </main>
@@ -153,25 +148,8 @@
             let friendNews = new FriendNews(newsData);
             $('#friendsNewsContainer').append(friendNews.render());
 
-
-            let friendsData = [
-                {
-                    name: '徐杨晨',
-                    headPicURL: '../imgs/index/bg2.jpg'
-                },
-                {
-                    name: '徐梓航',
-                    headPicURL: '../imgs/index/bg3.jpg'
-                },
-                {
-                    name: '徐杨晨',
-                    headPicURL: '../imgs/index/bg4.jpg'
-                }];
-            $.each(friendsData, function (index, val) {
-                $('.friends-list').append($(`<div><a href="${new URI(window.location.href).query({friendName: encodeURI(val.name)})}"><img class="uk-border-circle" src="${val.headPicURL}" title="${val.name}" uk-tooltip/></a></div>`));
-            });
-
             $('footer').show();
+
         });
     </script>
 </html>
