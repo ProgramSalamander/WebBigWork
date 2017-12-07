@@ -6,6 +6,10 @@
  * Time: 下午9:32
  */
 
-function getHeadPicURI($url){
+function getHeadPicURL($url){
     return '../database/imgs/headPics/'.$url;
+}
+
+function getAlbumURL($url){
+    return '../database/imgs/albums/'.$url;
 }

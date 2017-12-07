@@ -30,5 +30,5 @@ function getUserInfo($username,
     $db = getDB();
     $ret = $db->query("SELECT * FROM user WHERE username = '$username' AND password = '$password'");
     return $ret->fetchArray();
-
 }
+

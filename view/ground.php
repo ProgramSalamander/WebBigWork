@@ -4,7 +4,8 @@ require_once '../php/util.php';
 session_start();
 checkSignIn();
 
-$headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+$headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
+$username = $_COOKIE['username'];
 ?>
 <html lang="zh">
     <head>
@@ -266,8 +267,10 @@ $headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="homepage.php"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
+                                    <li><a href="homepage.php?username=<?php echo $username ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
+                                    </li>
+                                    <li><a href="album.php?username=<?php echo $username ?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a>
+                                    </li>
                                     <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
                             </div>
@@ -282,8 +285,8 @@ $headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
                 <ul class="uk-card-body uk-nav uk-nav-default uk-flex-left uk-child-width-auto ground-filter">
                     <li><a href="?label=people">人像</a></li>
                     <li><a href="?label=scenery">风景</a></li>
-                    <li><a href="?label=pet">宠物</a></li>
-                    <li><a href="?label=object">物体</a></li>
+                    <li><a href="?label=animal">动物</a></li>
+                    <li><a href="?label=plant">植物</a></li>
                     <li><a href="?label=food">美食</a></li>
                     <li><a href="?label=street">街拍</a></li>
                     <li><a href="?label=art">艺术</a></li>

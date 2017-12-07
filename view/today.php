@@ -4,7 +4,7 @@ require_once '../php/util.php';
 session_start();
 checkSignIn();
 
-$headPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+$headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
 ?>
 <html lang="zh">

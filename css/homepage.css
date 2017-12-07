@@ -6,10 +6,20 @@
     background: #f0506e;
 }
 
-#saveNicknameContainer input{
+#saveNicknameContainer input {
     width: 200px;
 }
 
-#saveSignContainer input{
+#saveSignContainer input {
     width: 250px;
+}
+
+#progressBar {
+    width: 0;
+    position: fixed;
+    top: 0;
+    height: 3px;
+    background: #1e87f0;
+    transition: 1s;
+    z-index: 999;
 }

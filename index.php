@@ -1,7 +1,7 @@
 <?php
 require_once 'php/user.php';
 session_start();
-if (!empty($_COOKIE['username'])){
+if (!empty($_COOKIE['username'])) {
     header("location: view/today.php");
 }
 ?>
@@ -17,6 +17,7 @@ if (!empty($_COOKIE['username'])){
         <script src="js/lib/uikit-icons.min.js"></script>
         <script src="js/lib/URI.min.js"></script>
         <script src="js/util/notification.js"></script>
+        <script src="js/util/checkInput.js"></script>
 
     </head>
     <body class="uk-background-cover uk-position-relative uk-offcanvas-content">
@@ -155,44 +156,22 @@ if (!empty($_COOKIE['username'])){
                             }
                         },
                         error: function () {
-                            notification('网络异常，请检查网络后重试。','warning')
+                            notification('网络异常，请检查网络后重试。', 'warning')
                         }
                     });
                 }
                 return false;
             });
 
-            $('#signUpBtn').click(function () {
+            $('#signUpBtn').click(function (ev) {
+                ev.preventDefault();
+
                 let username = $('#signUpUsername').val();
                 let phone = $('#signUpPhone').val();
                 let nickname = $('#signUpNickname').val();
                 let password = $('#signUpPassword').val();
                 let passwordEnsure = $('#signUpPasswordEnsure').val();
-                if (username === '') {
-                    notification("用户名不能为空!", 'danger');
-                }
-                else if (username.length < 6 || username.length > 14) {
-                    notification("用户名长度需在6~14个字符之间!", 'danger');
-                }
-                else if (phone === '') {
-                    notification("手机号不能为空!", 'danger');
-                }
-                else if (phone.length !== 11) {
-                    notification("无效的手机号!", 'danger');
-                }
-                else if (nickname === '') {
-                    notification("昵称不能为空!", 'danger');
-                }
-                else if (nickname.length < 1 || nickname.length > 12) {
-                    notification("昵称长度需在1~12个字符之间!", 'danger');
-                }
-                else if (password === '') {
-                    notification("密码不能为空!", 'danger');
-                }
-                else if (!(password === passwordEnsure)) {
-                    notification("两次输入密码不一致!", 'danger');
-                }
-                else {
+                if (checkUsername(username) && checkPhone(phone) && checkNickname(nickname) && checkPassword(password, passwordEnsure)) {
                     $.ajax({
                         type: 'POST',
                         url: 'php/signUp.php',
@@ -208,18 +187,17 @@ if (!empty($_COOKIE['username'])){
                                 notification(data.msg, 'success');
                                 setTimeout(function () {
                                     window.location.href = 'view/today.php';
-                                }, 1000);
+                                }, 500);
                             }
                             else {
                                 notification(data.msg, 'danger');
                             }
                         },
                         error: function () {
-                            notification('网络异常，请检查网络后重试。','warning')
+                            notification('网络异常，请检查网络后重试。', 'warning')
                         }
                     });
                 }
-                return false;
             });
 
             $('#signUpForm').hide();

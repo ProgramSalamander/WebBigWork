@@ -4,15 +4,50 @@ require_once '../php/util.php';
 session_start();
 checkSignIn();
 
-$myHeadPicUrl = getHeadPicURI($_SESSION['user_info']['head_pic_url']);
+$myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
-
 $homepageUsername = $_GET['username'];
+$homepageNickname = '';
+$homepageSign = '';
+$homepageTotalPhotos = 0;
+$homepageTotalLikes = 0;
+$homepageTotalComments = 0;
+$homepageAlbums = array();
+$homepageLabels = array();
+
 try {
     $db = getDB();
-    $ret = $db->query();
-} catch (Exception $e) {
+    $ret = $db->query("SELECT * FROM user WHERE username = '$homepageUsername'");
+    $row = $ret->fetchArray();
+    if ($row) {
+        $homepageNickname = $row['nick_name'];
+        $homepageSign = $row['user_sign'];
+        $homepageTotalPhotos = $row['total_photos'];
+        $homepageTotalLikes = $row['total_likes'];
+        $homepageTotalComments = $row['total_comments'];
 
+        $ret = $db->query("SELECT album.album_id, album.album_name, album.cover_url FROM album, user WHERE user.username = '$homepageUsername' AND user.user_id = album.user_id ");
+        while ($row = $ret->fetchArray()) {
+            array_push($homepageAlbums, array('id' => $row['album_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
+        }
+
+        $sql = <<<EOF
+            SELECT DISTINCT label.label_chi_name, label.label_eng_name 
+            FROM photo,album,user,label 
+            WHERE user.username = '$homepageUsername'
+            AND user.user_id = album.user_id 
+            AND album.album_id = photo.album_id 
+            AND photo.label_id = label.label_id;
+EOF;
+        $ret = $db->query($sql);
+        while ($row = $ret->fetchArray()) {
+            array_push($homepageLabels, array('chi' => $row['label_chi_name'], 'eng' => $row['label_eng_name']));
+        }
+    } else {
+        header('location:error.php');
+    }
+} catch (Exception $e) {
+    header('location:error.php');
 }
 ?>
 <html lang="zh">
@@ -30,14 +65,18 @@ try {
         <script src="../js/lib/uikit-icons.min.js"></script>
         <script src="../js/lib/URI.min.js"></script>
         <script src="../js/util/imageHelper.js"></script>
+        <script src="../js/util/notification.js"></script>
+        <script src="../js/util/checkInput.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/album.js"></script>
 
         <script>
             $('document').ready(function () {
                 let uri = new URI();
-                loadAlbum();
-                if (uri.search(true)['username'] === encodeURI('<?php echo $_COOKIE['username']?>')){
+                loadLabels();
+                loadAlbums();
+
+                if (uri.search(true)['username'] === encodeURI('<?php echo $_COOKIE['username']?>')) {
                     myPageMode();
                 }
                 else {
@@ -46,10 +85,162 @@ try {
             });
 
             function myPageMode() {
+                //主页头像设置
                 $('#homePageHeadPic').attr('src', '<?php echo $myHeadPicUrl ?>');
 
-                initEditInfo($('#editNicknameContainer'),$('#saveNicknameContainer'));
-                initEditInfo($('#editSignContainer'),$('#saveSignContainer'));
+                $('#upload').on('change', function () {
+                    let formData = new FormData();
+                    formData.append('file', $('#upload')[0].files[0]);
+                    $.ajax({
+                        type: 'POST',
+                        url: '../php/modifyHeadPic.php',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 200) {
+                                notification(data.msg, 'success');
+                                $('#progressBar').css('width', '100%');
+                                $('#myHeadPic').attr('src','').attr('src', '<?php echo $myHeadPicUrl?>');
+                                $('#homePageHeadPic').attr('src','').attr('src', '<?php echo $myHeadPicUrl?>');
+                                setTimeout(function () {
+                                    $('#progressBar').hide().css('width', '0%');
+                                }, 1000);
+                            }
+                            else {
+                                $('#progressBar').css('width', '100%');
+                                notification(data.msg, 'danger');
+                                setTimeout(function () {
+                                    $('#progressBar').hide().css('width', '0%');
+                                }, 1000);
+                            }
+                        },
+                        error: function (code) {
+                            console.log(code);
+                            $('#progressBar').css('width', '100%');
+                            notification('网络异常，请稍候再试。', 'warning');
+                            setTimeout(function () {
+                                $('#progressBar').hide().css('width', '0%');
+                            }, 1000);
+                        }
+
+                    });
+                });
+                //头像修改
+                UIkit.upload('.js-head-pic-upload', {
+                    multiple: false,
+                    loadStart: function () {
+                        $('#progressBar').show();
+                    },
+                    completeAll: function () {
+                        $('#progressBar').css('width', '20%');
+                    },
+                    error: function () {
+                        $('#progressBar').css('width', '100%');
+                        notification('图片上传失败，请重试。', 'warning');
+                        setTimeout(function () {
+                            $('#progressBar').hide().css('width', '0%');
+                        }, 1000);
+                    }
+                });
+
+                //昵称修改
+                let tempNickname = $('#editNicknameText').text();
+
+                $('#editNicknameBtn').click(function () {
+                    $('#saveNicknameInput').val($('#editNicknameText').text());
+                    tempNickname = $('#editNicknameText').text();
+                    $('#editNicknameContainer').toggle();
+                    $('#saveNicknameContainer').toggle();
+                });
+
+                $('#saveNicknameConfirmBtn').click(function () {
+                    let newNickname = $('#saveNicknameInput').val();
+                    if (tempNickname === newNickname) {
+                        notification('昵称未发生改动。', 'warning');
+                    }
+                    else if (checkNickname(newNickname)) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '../php/modifyPersonalInfo.php',
+                            data: {
+                                callFunc: 'modifyNickname',
+                                username: '<?php echo $myUsername?>',
+                                newNickname: newNickname,
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.code === 200) {
+                                    notification(data.msg, 'success');
+                                    $('#editNicknameText').text(newNickname);
+                                    $('#editNicknameContainer').toggle();
+                                    $('#saveNicknameContainer').toggle();
+                                }
+                                else {
+                                    notification(data.msg, 'danger');
+                                }
+                            },
+                            error: function () {
+                                notification('网络传输异常，请稍候再试。', 'warning');
+                            }
+                        });
+                    }
+
+                });
+
+                $('#saveNicknameCancelBtn').click(function () {
+                    $('#editNicknameText').text(tempNickname);
+                    $('#editNicknameContainer').toggle();
+                    $('#saveNicknameContainer').toggle();
+                });
+
+                //签名修改
+                let tempSign = $('#editSignText').text();
+
+                $('#editSignBtn').click(function () {
+                    $('#saveSignInput').val($('#editSignText').text());
+                    tempSign = $('#editSignText').text();
+                    $('#editSignContainer').toggle();
+                    $('#saveSignContainer').toggle();
+                });
+
+                $('#saveSignConfirmBtn').click(function () {
+                    let newSign = $('#saveSignInput').val();
+                    if (checkNickname(newSign)) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '../php/modifyPersonalInfo.php',
+                            data: {
+                                callFunc: 'modifySign',
+                                username: '<?php echo $myUsername?>',
+                                newSign: newSign,
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.code === 200) {
+                                    notification(data.msg, 'success');
+                                    $('#editSignText').text(newSign);
+                                    $('#editSignContainer').toggle();
+                                    $('#saveSignContainer').toggle();
+                                }
+                                else {
+                                    notification(data.msg, 'danger');
+                                }
+                            },
+                            error: function () {
+                                notification('网络传输异常，请稍候再试。', 'warning');
+                            }
+                        });
+                    }
+
+                });
+
+                $('#saveSignCancelBtn').click(function () {
+                    $('#editSignText').text(tempSign);
+                    $('#editSignContainer').toggle();
+                    $('#saveSignContainer').toggle();
+                });
 
                 $('#albumContainer').append($(`<div></div>`))
             }
@@ -59,74 +250,25 @@ try {
                 $('#editSignBtn').hide();
             }
 
-            function initEditInfo(editContainer, saveContainer) {
-                let editTxt = editContainer.find('span');
-                let editBtn = editContainer.find('a');
-
-                let saveInput = saveContainer.find('input');
-                let saveBtn = saveInput.next();
-                let cancelBtn = saveBtn.next();
-
-                let temp = editTxt.text();
-
-                editBtn.click(function () {
-                    saveInput.val(editTxt.text());
-
-                    temp = editTxt.text();
-
-                    editContainer.toggle();
-                    saveContainer.toggle();
-                });
-
-                saveBtn.click(function () {
-                    editTxt.text(saveInput.val());
-
-                    saveContainer.toggle();
-                    editContainer.toggle();
-
-                });
-
-                cancelBtn.click(function () {
-                    editTxt.text(temp);
-
-                    saveContainer.toggle();
-                    editContainer.toggle();
-                });
-
-
+            function loadAlbums() {
+                let albums = <?php echo json_encode($homepageAlbums)?>;
+                $.each(albums, function (index, element) {
+                    $('#albumContainer').append(new Album(element).render());
+                })
             }
 
-            function loadAlbum() {
-                let data = [
-                    {
-                        id: 1,
-                        name: '童年',
-                        username: 'xycxyc',
-                        coverUrl: '../imgs/index/bg1.jpg'
-                    },
-                    {
-                        id: 2,
-                        name: '20岁',
-                        username: 'xycxyc',
-                        coverUrl: '../imgs/index/bg1.jpg'
-                    },
-                    {
-                        id: 3,
-                        name: '30岁',
-                        username: 'xycxyc',
-                        coverUrl: '../database/imgs/headPics/default.jpg'
-                    },
-                    {
-                        id: 4,
-                        name: '40岁',
-                        username: 'xycxyc',
-                        coverUrl: '../database/imgs/headPics/default.jpg'
-                    },
-                ];
-
-                $.each(data, function (index, item) {
-                    $('#albumContainer').append(new Album(item).render());
-                })
+            function loadLabels() {
+                let labels = <?php echo json_encode($homepageLabels) ?>;
+                if (labels.length === 0) {
+                    $('#labelContainer').append($('<p>暂无标签</p>'));
+                }
+                else {
+                    $.each(labels, function (index, element) {
+                        $('#labelContainer').append(`<div>
+                    <span class="uk-label label-${element.eng}">${element.chi}</span>
+                        </div>`);
+                    });
+                }
             }
 
         </script>
@@ -160,8 +302,10 @@ try {
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="homepage.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
-                                    <li><a href="album.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
+                                    <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
+                                    </li>
+                                    <li><a href="album.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a>
+                                    </li>
                                     <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
                             </div>
@@ -169,59 +313,54 @@ try {
                     </ul>
                 </div>
             </nav>
+            <div id="progressBar">
+
+            </div>
         </header>
         <main class="uk-padding-large uk-padding-remove-top uk-padding-remove-bottom">
             <section class="uk-padding uk-padding-remove-bottom">
                 <div uk-grid>
                     <div class="uk-width-expand">
-                        <div style="overflow: hidden; position: relative" class="uk-margin-top uk-align-left uk-width-small uk-height-small uk-border-circle">
-                            <img id="homePageHeadPic" class="photo-high" src="<?php  ?>"/>
+                        <div style="overflow: hidden; position: relative"
+                             class="uk-margin-top uk-align-left uk-width-small uk-height-small uk-border-circle uk-inline-clip uk-transition-toggle uk-light"
+                             uk-form-custom>
+                            <a class="js-head-pic-upload">
+                                <input id="upload" type="file" accept="image/jpeg">
+                                <img id="homePageHeadPic" class="photo-high" src=""/>
+                                <div class="uk-position-center">
+                                    <span class="uk-transition-fade">修改头像</span>
+                                </div>
+                            </a>
                         </div>
-                        <h2 id="editNicknameContainer" class="uk-article-title"><span>路飞</span>
+                        <h2 id="editNicknameContainer" class="uk-article-title"><span id="editNicknameText"><?php echo $homepageNickname ?></span>
                             <a id="editNicknameBtn" class="uk-icon" uk-icon="icon:file-edit" title="修改昵称" uk-tooltip></a>
                         </h2>
                         <div style="display: none" id="saveNicknameContainer" class="uk-h2">
-                            <input class="uk-input" type="text" name="nickname"/>
+                            <input id="saveNicknameInput" class="uk-input" type="text" name="nickname"/>
                             <a id="saveNicknameConfirmBtn" class="uk-icon" uk-icon="icon:check" title="保存并上传" uk-tooltip></a>
                             <a id="saveNicknameCancelBtn" class="uk-icon" uk-icon="icon:close" title="取消" uk-tooltip></a>
                         </div>
-                        <p id="editSignContainer" class="uk-article-meta"><span>要成为海贼王的男人</span>
+                        <p id="editSignContainer" class="uk-article-meta"><span id="editSignText"><?php echo $homepageSign ?></span>
                             <a id="editSignBtn" class="uk-icon" uk-icon="icon:file-edit" title="修改签名" uk-tooltip></a>
                         </p>
                         <div style="display: none;" id="saveSignContainer">
-                            <input class="uk-input uk-article-meta" type="text" name="sign"/>
+                            <input id="saveSignInput" class="uk-input uk-article-meta" type="text" name="sign"/>
                             <a id="saveSignConfirmBtn" class="uk-icon" uk-icon="icon:check" title="保存并上传" uk-tooltip></a>
                             <a id="saveSignCancelBtn" class="uk-icon" uk-icon="icon:close" title="取消" uk-tooltip></a>
                         </div>
                     </div>
                     <div class="uk-padding-small uk-align-center uk-margin-large-right">
-                        <p>总作品数：<span id="totalWorks" class="uk-badge">12</span></p>
-                        <p>获得喜欢总数：<span id="totalLikes" class="uk-badge">12</span></p>
-                        <p>获得评论总数：<span id="totalComments" class="uk-badge">12</span></p>
+                        <p>总作品数：<span id="totalWorks" class="uk-badge"><?php echo $homepageTotalPhotos ?></span></p>
+                        <p>获得喜欢总数：<span id="totalLikes" class="uk-badge"><?php echo $homepageTotalLikes ?></span></p>
+                        <p>获得评论总数：<span id="totalComments" class="uk-badge"><?php echo $homepageTotalComments ?></span></p>
                     </div>
                 </div>
                 <h3 class="uk-margin">常用标签</h3>
-                <div id="labelContainer" class="uk-grid-small uk-padding-small uk-child-width-auto" uk-grid>
-                    <div>
-                        <span class="uk-label label-scenery">风景</span>
-                    </div>
-                    <div>
-                        <span class="uk-label label-people">人像</span>
-                    </div>
-                    <div>
-                        <span class="uk-label label-animal">动物</span>
-                    </div>
-                </div>
-
+                <div id="labelContainer" class="uk-grid-small uk-padding-small uk-child-width-auto" uk-grid></div>
             </section>
             <section class="uk-padding">
                 <h3 class="uk-margin">相册</h3>
-                <div id="albumContainer" class="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l" uk-grid>
-
-                </div>
-<!--                <div class="uk-margin-top uk-text-center">-->
-<!--                    <button class="uk-button uk-button-text">查看更多相册</button>-->
-<!--                </div>-->
+                <div id="albumContainer" class="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l" uk-grid></div>
             </section>
         </main>
         <footer>

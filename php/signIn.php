@@ -34,5 +34,5 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
         echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
     }
 } else {
-    echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍后再试。'));
+    echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
 }
