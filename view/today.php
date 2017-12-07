@@ -112,15 +112,17 @@ $myUsername = $_COOKIE['username'];
                         <li><a href="ground.php">四处逛逛</a></li>
                         <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a id="myHeadPic" href="">
-                                <script>
+                            <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
+                            <script>
                                     $('#myHeadPic').prepend(new MyHeadPic('<?php echo $headPicUrl?>', 50).render());
                                 </script>
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="homepage.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a></li>
-                                    <li><a href="album.php?username=<?php echo $myUsername?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a></li>
+                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
+                                    </li>
+                                    <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
+                                    </li>
                                     <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
                             </div>

@@ -13,3 +13,14 @@
 #saveSignContainer input {
     width: 250px;
 }
+
+.add-album{
+    height: 194px;
+    border: 2px dashed gray;
+}
+
+.add-album div{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}

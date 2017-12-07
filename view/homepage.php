@@ -8,6 +8,7 @@ $myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 
 $myUsername = $_COOKIE['username'];
 $homepageUsername = $_GET['username'];
+$homepageHeadPicUrl = '';
 $homepageNickname = '';
 $homepageSign = '';
 $homepageTotalPhotos = 0;
@@ -22,6 +23,7 @@ try {
     $row = $ret->fetchArray();
     if ($row) {
         $homepageNickname = $row['nick_name'];
+        $homepageHeadPicUrl = getHeadPicURL($row['head_pic_url']);
         $homepageSign = $row['user_sign'];
         $homepageTotalPhotos = $row['total_photos'];
         $homepageTotalLikes = $row['total_likes'];
@@ -241,10 +243,18 @@ EOF;
                     $('#saveSignContainer').toggle();
                 });
 
-                $('#albumContainer').append($(`<div></div>`))
+                $('#albumContainer').append($(`<div class="uk-text-center">
+                                                    <div class="add-album">
+                                                        <div>
+                                                             <a class="uk-icon" uk-icon="icon: plus;ratio:3" title="添加相册" uk-tooltip></a>
+                                                        </div>
+                                                    </div>
+                                                </div>`))
             }
 
             function hisPageMode() {
+                $('#homePageHeadPic').attr('src','<?php echo $homepageHeadPicUrl?>');
+
                 $('#editNicknameBtn').hide();
                 $('#editSignBtn').hide();
             }
@@ -294,16 +304,16 @@ EOF;
                         <li><a href="ground.php">四处逛逛</a></li>
                         <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a id="myHeadPic" href="">
+                            <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>
                                     $('#myHeadPic').prepend(new MyHeadPic('<?php echo $myHeadPicUrl?>', 50).render());
                                 </script>
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
+                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
                                     </li>
-                                    <li><a href="album.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:image"></span>我的相册</a>
+                                    <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
                                     </li>
                                     <li><a href="../php/signOut.php"><span class="uk-icon" uk-icon="icon:sign-out"></span>登出</a></li>
                                 </ul>
