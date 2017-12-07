@@ -153,6 +153,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
                                             data: {user_id: user_id},
                                             success: function (data) {
                                                 if (data.code === 200) {
+
                                                     searchUser();
                                                     notification(data.msg, 'success');
                                                 }
@@ -244,6 +245,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             }
 
             function searchUser() {
+                $('#list').html('');
                 let searchVal = $('#search').val();
                 if (!searchVal) {
                     notification('用户名不能为空！', 'warning');

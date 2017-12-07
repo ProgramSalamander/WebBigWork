@@ -5,6 +5,7 @@ session_start();
 checkSignIn();
 
 $myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
+
 $myUsername = $_COOKIE['username'];
 $homepageUsername = $_GET['username'];
 $homepageNickname = '';
@@ -69,10 +70,18 @@ EOF;
         <script src="../js/util/checkInput.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/album.js"></script>
+        <script src="../js/component/topProgressBar.js"></script>
 
         <script>
+            let topProgressBar = new TopProgressBar();
+
             $('document').ready(function () {
                 let uri = new URI();
+
+                topProgressBar.init();
+
+                adapt($('#homePageHeadPic'));
+
                 loadLabels();
                 loadAlbums();
 
@@ -100,29 +109,22 @@ EOF;
                         dataType: 'json',
                         success: function (data) {
                             if (data.code === 200) {
+                                topProgressBar.end(function () {
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 500)
+                                });
                                 notification(data.msg, 'success');
-                                $('#progressBar').css('width', '100%');
-                                $('#myHeadPic').attr('src','').attr('src', '<?php echo $myHeadPicUrl?>');
-                                $('#homePageHeadPic').attr('src','').attr('src', '<?php echo $myHeadPicUrl?>');
-                                setTimeout(function () {
-                                    $('#progressBar').hide().css('width', '0%');
-                                }, 1000);
+                                adapt($('#homePageHeadPic'));
                             }
                             else {
-                                $('#progressBar').css('width', '100%');
+                                topProgressBar.end();
                                 notification(data.msg, 'danger');
-                                setTimeout(function () {
-                                    $('#progressBar').hide().css('width', '0%');
-                                }, 1000);
                             }
                         },
                         error: function (code) {
-                            console.log(code);
-                            $('#progressBar').css('width', '100%');
+                            topProgressBar.end();
                             notification('网络异常，请稍候再试。', 'warning');
-                            setTimeout(function () {
-                                $('#progressBar').hide().css('width', '0%');
-                            }, 1000);
                         }
 
                     });
@@ -131,17 +133,14 @@ EOF;
                 UIkit.upload('.js-head-pic-upload', {
                     multiple: false,
                     loadStart: function () {
-                        $('#progressBar').show();
+                        topProgressBar.start();
                     },
                     completeAll: function () {
-                        $('#progressBar').css('width', '20%');
+                        topProgressBar.process();
                     },
                     error: function () {
-                        $('#progressBar').css('width', '100%');
+                        topProgressBar.end();
                         notification('图片上传失败，请重试。', 'warning');
-                        setTimeout(function () {
-                            $('#progressBar').hide().css('width', '0%');
-                        }, 1000);
                     }
                 });
 
@@ -313,9 +312,6 @@ EOF;
                     </ul>
                 </div>
             </nav>
-            <div id="progressBar">
-
-            </div>
         </header>
         <main class="uk-padding-large uk-padding-remove-top uk-padding-remove-bottom">
             <section class="uk-padding uk-padding-remove-bottom">
@@ -326,7 +322,7 @@ EOF;
                              uk-form-custom>
                             <a class="js-head-pic-upload">
                                 <input id="upload" type="file" accept="image/jpeg">
-                                <img id="homePageHeadPic" class="photo-high" src=""/>
+                                <img id="homePageHeadPic" src=""/>
                                 <div class="uk-position-center">
                                     <span class="uk-transition-fade">修改头像</span>
                                 </div>
