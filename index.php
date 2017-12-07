@@ -193,7 +193,7 @@ if (!empty($_COOKIE['username'])) {
                                 notification(data.msg, 'danger');
                             }
                         },
-                        error: function () {
+                        error: function (error) {
                             notification('网络异常，请检查网络后重试。', 'warning')
                         }
                     });

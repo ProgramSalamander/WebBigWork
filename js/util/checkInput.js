@@ -67,6 +67,11 @@ function checkPassword(password, passwordEnsure) {
     return true;
 }
 
+/**
+ * 校验签名
+ * @param sign 输入的签名
+ * @returns {boolean} 是否合格
+ */
 function checkSign(sign) {
     if (sign === '') {
         notification("签名不能为空!", 'danger');
@@ -74,6 +79,19 @@ function checkSign(sign) {
     }
     if (sign.length > 30) {
         notification("签名不能超过30个字符!", 'danger');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * 校验相册名
+ * @param albumName 输入的相册名
+ * @returns {boolean} 是否合格
+ */
+function checkAlbumName(albumName) {
+    if (albumName === ''){
+        notification("相册名不能为空！",'danger');
         return false;
     }
     return true;

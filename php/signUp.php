@@ -7,6 +7,9 @@
  */
 require_once 'dbHelper.php';
 require_once 'encrypter.php';
+require_once 'util.php';
+
+//mkdir('../database/imgs/albums/1');
 
 if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['phone']) && isset($_POST['nickname'])) {
     $username = $_POST['username'];
@@ -23,6 +26,8 @@ if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['phon
             if (!$ret) {
                 echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试'));
             } else {
+                mkdir(getAlbumURL($username));
+                mkdir(getAlbumURL($username.'/默认相册'));
                 setcookie('username', $username, time() + 7 * 24 * 3600,'/');
                 setcookie('password', $password, time() + 7 * 24 * 3600,'/');
                 echo json_encode(array('code' => 200, 'msg' => '注册成功！'));

@@ -208,7 +208,7 @@ EOF;
 
                 $('#saveSignConfirmBtn').click(function () {
                     let newSign = $('#saveSignInput').val();
-                    if (checkNickname(newSign)) {
+                    if (checkSign(newSign)) {
                         $.ajax({
                             type: 'POST',
                             url: '../php/modifyPersonalInfo.php',
@@ -243,10 +243,11 @@ EOF;
                     $('#saveSignContainer').toggle();
                 });
 
+                //新建相册
                 $('#albumContainer').append($(`<div class="uk-text-center">
                                                     <div class="add-album">
                                                         <div>
-                                                             <a class="uk-icon" uk-icon="icon: plus;ratio:3" title="添加相册" uk-tooltip></a>
+                                                             <a href="newAlbum.php" class="uk-icon" uk-icon="icon: plus;ratio:3" title="添加相册" uk-tooltip></a>
                                                         </div>
                                                     </div>
                                                 </div>`))
