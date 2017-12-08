@@ -87,6 +87,7 @@ EOF;
                 loadLabels();
                 loadAlbums();
 
+                //判断浏览的是否是当前用户的主页
                 if (uri.search(true)['username'] === encodeURI('<?php echo $_COOKIE['username']?>')) {
                     myPageMode();
                 }
@@ -250,7 +251,7 @@ EOF;
                                                              <a href="newAlbum.php" class="uk-icon" uk-icon="icon: plus;ratio:3" title="添加相册" uk-tooltip></a>
                                                         </div>
                                                     </div>
-                                                </div>`))
+                                                </div>`));
             }
 
             function hisPageMode() {

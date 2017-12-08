@@ -54,10 +54,9 @@ $myUsername = $_COOKIE['username'];
 
         <script>
             let topProgressBar = new TopProgressBar();
+            topProgressBar.init();
 
             $('document').ready(function () {
-                topProgressBar.init();
-
                 //标签加载
                 $.each(getLabelChiArray(), function (index, element) {
                     $('#albumLabel').append($(`<option>${element}</option>`));
@@ -176,7 +175,7 @@ $myUsername = $_COOKIE['username'];
                     <div class="uk-margin">
                         <label class="uk-form-label">相册封面</label>
                         <div class="uk-form-controls">
-                            <div style="height:250px; overflow: hidden" class="uk-position-relative uk-overflow-hidden uk-inline-clip uk-transition-toggle uk-light" uk-form-custom>
+                            <div style="height:250px;" class="uk-inline-clip uk-transition-toggle uk-light" uk-form-custom>
                                 <input id="coverUpload" name="file" type="file" accept="image/jpeg"/>
                                 <img id="cover" class="photo-long" alt="默认封面" src="../database/imgs/albums/default_cover.jpg"/>
                                 <div class="uk-position-center">

@@ -17,6 +17,7 @@ if (isset($_POST['callFunc'])) {
                     $db = getDB();
                     $ret = $db->exec("UPDATE user SET nick_name = '$newNickname' WHERE username = '$username'");
                     if ($ret) {
+                        $_SESSION['user_info']['nick_name'] = $newNickname;
                         echo json_encode(array('code' => 200, 'msg' => '修改昵称成功！'));
                     } else {
                         echo json_encode(array('code' => 404, 'msg' => '修改昵称失败，请稍候再试。'));
@@ -36,6 +37,7 @@ if (isset($_POST['callFunc'])) {
                     $db = getDB();
                     $ret = $db->exec("UPDATE user SET user_sign = '$newSign' WHERE username = '$username'");
                     if ($ret) {
+                        $_SESSION['user_info']['user_sign'] = $newSign;
                         echo json_encode(array('code' => 200, 'msg' => '修改签名成功！'));
                     } else {
                         echo json_encode(array('code' => 404, 'msg' => '修改签名失败，请稍候再试。'));

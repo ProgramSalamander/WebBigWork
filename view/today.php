@@ -39,7 +39,7 @@ $myUsername = $_COOKIE['username'];
                             photoLabelClass: 'label-people'
                         },
                         {
-                            photoUrl: '../../imgs/index/bg1.jpg',
+                            photoUrl: '../../imgs/girl.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '风景',
                             photoLabelClass: 'label-scenery'

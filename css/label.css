@@ -25,3 +25,21 @@
 .label-art{
     background: mediumpurple;
 }
+
+.badge-comment{
+    background: #1e87f0;
+    font-size: 1rem;
+    color: white;
+}
+
+.badge-like{
+    background: #f0506e;
+    font-size: 1rem;
+    color: white;
+}
+
+.badge-work{
+    background: #32d296;
+    font-size: 1rem;
+    color: white;
+}
