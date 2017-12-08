@@ -22,9 +22,9 @@ try {
         $albumInfo = array('name' => $row['album_name'], 'userId' => $row['user_id'], 'coverUrl' => getAlbumURL($row['cover_url']), 'label_chi' => $row['label_chi_name'], 'label_eng' => $row['label_eng_name'], 'author' => $row['nick_name']);
 
         $albumPhotos = array();
-        $ret = $db->query("SELECT photo_id, photo_name, photo_url AS album_comments FROM photo WHERE album_id = '$albumId'");
+        $ret = $db->query("SELECT photo_id, photo_url AS album_comments FROM photo WHERE album_id = '$albumId'");
         while ($row = $ret->fetchArray()) {
-            array_push($albumPhotos, array('photoId' => $row['photo_id'], 'photoName' => $row['photo_name'], 'photoUrl' => $row['photo_url']));
+            array_push($albumPhotos, array('photoId' => $row['photo_id'], 'photoUrl' => $row['photo_url']));
         }
         $albumInfo['photos'] = $albumPhotos;
 
@@ -124,6 +124,25 @@ try {
                 }
 
                 adapt($('#cover'));
+
+                if ($('#photoContainer').html() === '') {
+                    $('#photoContainer').html('<p>暂无照片</p>');
+                    $('body').append(
+                        $('<img id="pointer" class="uk-transition-toggle" src="../imgs/icon/hand_up.png" />')
+                            .css('width', '40px')
+                            .css('height', '40px')
+                            .css('z-index', '999')
+                            .css('position', 'absolute')
+                            .css('transition','0.5s')
+                            .offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5})
+                    );
+                    setInterval(function () {
+                        $('#pointer').offset({top: $('#addPhoto').offset().top + 25, left: $('#addPhoto').offset().left + 5});
+                        setTimeout(function () {
+                            $('#pointer').offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5});
+                        },500);
+                    }, 1000);
+                }
 
             });
 
@@ -236,7 +255,7 @@ try {
                         },
                         error: function (error) {
                             console.log(error);
-                            notification('网络传输异常，请重试。','warning');
+                            notification('网络传输异常，请重试。', 'warning');
                             name.html(originName);
                             label.html(originLabel);
                             cancelBtn.hide();
@@ -267,10 +286,8 @@ try {
             function CreatePhoto(photoData) {
                 return $(`<div style="height: 150px" class="uk-text-center">
                                 <a class="uk-inline-clip uk-transition-toggle" href="photoContent.php?id=${photoData.id}">
-                                    <img src="${photoData.url+'?t='+new Date().getTime()}"/>
-                                    <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-default">
-                                        <p class="uk-text-muted uk-margin-remove">${photoData.name}</p>
-                                    </div>
+                                    <img class="uk-transition-scale-up uk-transition-opaque" src="${photoData.url}"/>
+
                                 </a>
                             </div>`);
             }
@@ -365,45 +382,12 @@ try {
             <section class="uk-width-expand right-part">
                 <h4>
                     相册照片
-                    <a id="addPhoto" class="uk-hidden" title="添加图片" uk-form-custom uk-tooltip>
+                    <a id="addPhoto" href="photoUpload.php?nm=<?php echo $albumInfo['name'] ?>" class="uk-hidden" title="添加图片" uk-form-custom
+                       uk-tooltip>
                         <img src="../imgs/icon/add.png"/>
-                        <input type="file" name="file" accept="image/jpeg">
                     </a>
                 </h4>
-                <div id="photoContainer" class="uk-grid-small uk-child-width-1-4" uk-grid>
-                    <div class="uk-text-center">
-                        <a class="uk-inline-clip uk-transition-toggle">
-                            <img src="../imgs/index/bg1.jpg"/>
-                            <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-default">
-                                <p class="uk-text-muted uk-margin-remove">照片一</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="uk-text-center">
-                        <a class="uk-inline-clip uk-transition-toggle">
-                            <img src="../imgs/index/bg2.jpg"/>
-                            <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-default">
-                                <p class="uk-text-muted uk-margin-remove">照片二</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="uk-text-center">
-                        <a class="uk-inline-clip uk-transition-toggle">
-                            <img src="../imgs/index/bg3.jpg"/>
-                            <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-default">
-                                <p class="uk-text-muted uk-margin-remove">照片三</p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="uk-text-center">
-                        <a class="uk-inline-clip uk-transition-toggle">
-                            <img src="../imgs/index/bg4.jpg"/>
-                            <div class="uk-transition-slide-bottom uk-position-bottom uk-overlay uk-overlay-default">
-                                <p class="uk-text-muted uk-margin-remove">照片四</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                <div id="photoContainer" class="uk-grid-small uk-child-width-1-4" uk-grid></div>
             </section>
         </main>
         <footer>
