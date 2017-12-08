@@ -155,7 +155,7 @@ $myUsername = $_COOKIE['username'];
             </nav>
         </header>
         <main class="uk-padding-large uk-padding-remove-top uk-padding-remove-bottom">
-            <section class="uk-section uk-flex uk-flex-center">
+            <section class="uk-flex uk-flex-center">
                 <form class="uk-form-horizontal">
                     <input type="hidden" name="callFunc" value="addAlbum"/>
                     <h3>新建相册</h3>
@@ -185,13 +185,13 @@ $myUsername = $_COOKIE['username'];
                         </div>
                     </div>
                     <div class="uk-margin uk-text-center">
-                        <button id="submit" class="uk-button uk-button-default uk-form-width-medium">新建</button>
+                        <button id="submit" class="uk-button uk-button-primary uk-form-width-medium">新建</button>
                     </div>
                 </form>
             </section>
         </main>
         <footer>
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+            <div class="uk-background-secondary uk-light uk-text-center uk-position-bottom">
                 <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
             </div>
         </footer>

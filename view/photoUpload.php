@@ -52,7 +52,7 @@ try {
             }
 
             #preview{
-                /*display: none;*/
+                height: 300px;
                 overflow: scroll;
             }
         </style>
@@ -134,14 +134,14 @@ try {
             </nav>
         </header>
         <main>
-            <section class="uk-margin uk-flex uk-flex-center">
-                <form class="uk-width-2-5 uk-form-horizontal">
+            <section class="uk-margin uk-margin-remove-bottom uk-flex uk-flex-center">
+                <form class="uk-width-2-3 uk-form-horizontal">
                     <input type="hidden" name="callFunc" value="addAlbum"/>
                     <h3>上传图片</h3>
-                    <div class="uk-margin">
+                    <div class="uk-margin uk-flex uk-flex-center">
                         <label class="uk-form-label" for="destAlbum">目标相册</label>
                         <div class="uk-form-controls">
-                            <select class="uk-select" id="destAlbum" name="destAlbum"></select>
+                            <select class="uk-form-width-medium uk-select" id="destAlbum" name="destAlbum"></select>
                         </div>
                     </div>
                     <div class="uk-margin uk-placeholder uk-text-center">
@@ -153,14 +153,107 @@ try {
                         </div>
                     </div>
                     <div class="uk-margin uk-text-center">
-                        <button id="submit" class="uk-button uk-button-default uk-form-width-medium">上传</button>
+                        <button id="submit" class="uk-button uk-button-primary uk-form-width-medium">开始上传</button>
                     </div>
                 </form>
             </section>
-            <section class="uk-margin uk-flex uk-flex-center">
-                <div id="preview" class="uk-width-2-5 uk-child-width-1-3 uk-grid-small" uk-grid>
-                    <div style="height: 100px" class="uk-position-relative uk-overflow-hidden">
-                        <img class="photo-high" src="../imgs/girl.jpg"/>
+            <section class="uk-margin uk-margin-remove-top uk-flex uk-flex-center">
+                <div id="preview" class="uk-width-2-3 uk-child-width-1-4 uk-grid-small" uk-grid>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
+                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
+                            <img class="photo-high" src="../imgs/girl.jpg"/>
+                            <div class="uk-position-center">
+                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
