@@ -29,9 +29,9 @@ try {
         $homepageTotalLikes = $row['total_likes'];
         $homepageTotalComments = $row['total_comments'];
 
-        $ret = $db->query("SELECT album.album_id, album.album_name, album.cover_url FROM album, user WHERE user.username = '$homepageUsername' AND user.user_id = album.user_id ");
+        $ret = $db->query("SELECT album.album_id, album.user_id, album.album_name, album.cover_url FROM album, user WHERE user.username = '$homepageUsername' AND user.user_id = album.user_id ");
         while ($row = $ret->fetchArray()) {
-            array_push($homepageAlbums, array('id' => $row['album_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
+            array_push($homepageAlbums, array('id' => $row['album_id'],'userId' => $row['user_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
         }
 
         $sql = <<<EOF
@@ -82,7 +82,6 @@ EOF;
 
                 topProgressBar.init();
 
-                adapt($('#homePageHeadPic'));
 
                 loadLabels();
                 loadAlbums();
@@ -94,6 +93,8 @@ EOF;
                 else {
                     hisPageMode();
                 }
+
+                adapt($('#homePageHeadPic'));
             });
 
             function myPageMode() {
@@ -133,6 +134,14 @@ EOF;
                     });
                 });
                 //头像修改
+                $('#headPicContainer').html(`<a class="js-head-pic-upload">
+                                <input id="upload" type="file" accept="image/jpeg">
+                                <img id="homePageHeadPic" src="<?php echo $homepageHeadPicUrl?>"/>
+                                <div class="uk-position-center">
+                                    <span class="uk-transition-fade">修改头像</span>
+                                </div>
+                            </a>`);
+
                 UIkit.upload('.js-head-pic-upload', {
                     multiple: false,
                     loadStart: function () {
@@ -255,7 +264,7 @@ EOF;
             }
 
             function hisPageMode() {
-                $('#homePageHeadPic').attr('src','<?php echo $homepageHeadPicUrl?>');
+                $('#headPicContainer').html(`<img id="homePageHeadPic" src="<?php echo $homepageHeadPicUrl?>" />`);
 
                 $('#editNicknameBtn').hide();
                 $('#editSignBtn').hide();
@@ -313,7 +322,7 @@ EOF;
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
+                                    <li><a href="photoUpload.php"><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
                                     </li>
                                     <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
                                     </li>
@@ -329,16 +338,9 @@ EOF;
             <section class="uk-padding uk-padding-remove-bottom">
                 <div uk-grid>
                     <div class="uk-width-expand">
-                        <div style="overflow: hidden; position: relative"
+                        <div id="headPicContainer" style="overflow: hidden; position: relative"
                              class="uk-margin-top uk-align-left uk-width-small uk-height-small uk-border-circle uk-inline-clip uk-transition-toggle uk-light"
                              uk-form-custom>
-                            <a class="js-head-pic-upload">
-                                <input id="upload" type="file" accept="image/jpeg">
-                                <img id="homePageHeadPic" src=""/>
-                                <div class="uk-position-center">
-                                    <span class="uk-transition-fade">修改头像</span>
-                                </div>
-                            </a>
                         </div>
                         <h2 id="editNicknameContainer" class="uk-article-title"><span id="editNicknameText"><?php echo $homepageNickname ?></span>
                             <a id="editNicknameBtn" class="uk-icon" uk-icon="icon:file-edit" title="修改昵称" uk-tooltip></a>
@@ -368,7 +370,8 @@ EOF;
             </section>
             <section class="uk-padding">
                 <h3 class="uk-margin">相册</h3>
-                <div id="albumContainer" class="uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l" uk-grid></div>
+                <div id="albumContainer" class="uk-grid-small uk-child-width-1-1 uk-child-width-1-2@s uk-child-width-1-3@m uk-child-width-1-4@l"
+                     uk-grid></div>
             </section>
         </main>
         <footer>

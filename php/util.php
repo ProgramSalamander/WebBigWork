@@ -13,3 +13,7 @@ function getHeadPicURL($url){
 function getAlbumURL($url){
     return '../database/imgs/albums/'.$url;
 }
+
+function getPhotoURL($username, $albumName, $url){
+    return '../database/imgs/albums/'.$username.'/'.$albumName.'/'.$url;
+}

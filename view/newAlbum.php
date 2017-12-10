@@ -12,6 +12,7 @@ checkSignIn();
 
 $myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
 ?>
 
 <html lang="zh">
@@ -90,9 +91,9 @@ $myUsername = $_COOKIE['username'];
                                         }, 500)
                                     });
                                     notification(data.msg, 'success');
-                                    // setTimeout(function () {
-                                    //     window.location.href = '../view/album.php';
-                                    // }, 1000);
+                                    setTimeout(function () {
+                                        window.location.href = '../view/albumContent.php?an='+encodeURI($('#albumName').val())+'&ui=<?php echo $myUserId?>';
+                                    }, 1000);
                                 }
                                 else {
                                     topProgressBar.end();
@@ -142,7 +143,7 @@ $myUsername = $_COOKIE['username'];
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
+                                    <li><a href="photoUpload.php"><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
                                     </li>
                                     <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
                                     </li>

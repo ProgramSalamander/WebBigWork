@@ -10,21 +10,35 @@ require_once '../php/util.php';
 session_start();
 checkSignIn();
 
-$albumId = $_GET['id'];
 $myUsername = $_COOKIE['username'];
 
-$albumInfo = null;
+if (!isset($_GET['an']) || !isset($_GET['ui'])) {
+    header('location: error.php');
+}
+$albumName = urldecode($_GET['an']);
+$albumUserId = $_GET['ui'];
+$albumInfo = array('name' => $_GET['an'], 'userId' => $_GET['ui']);
 
 try {
     $db = getDB();
-    $ret = $db->query("SELECT a.album_name, a.user_id, a.cover_url,l.label_chi_name, l.label_eng_name, u.nick_name  FROM album AS a, label AS l, user AS u WHERE a.album_id = '$albumId' AND a.label_id = l.label_id AND a.user_id = u.user_id;");
+    $ret = $db->query("SELECT a.album_id, a.cover_url,l.label_chi_name, l.label_eng_name, u.nick_name  FROM album AS a, label AS l, user AS u WHERE a.album_name = '$albumName' AND a.user_id = '$albumUserId' AND a.label_id = l.label_id AND a.user_id = u.user_id;");
     if ($row = $ret->fetchArray()) {
-        $albumInfo = array('name' => $row['album_name'], 'userId' => $row['user_id'], 'coverUrl' => getAlbumURL($row['cover_url']), 'label_chi' => $row['label_chi_name'], 'label_eng' => $row['label_eng_name'], 'author' => $row['nick_name']);
+        $albumInfo['id'] = $row['album_id'];
+        $albumInfo['coverUrl'] = getAlbumURL($row['cover_url']);
+        $albumInfo['label_chi'] = $row['label_chi_name'];
+        $albumInfo['label_eng'] = $row['label_eng_name'];
+        $albumInfo['author'] = $row['nick_name'];
 
+        $albumId = $albumInfo['id'];
         $albumPhotos = array();
-        $ret = $db->query("SELECT photo_id, photo_url AS album_comments FROM photo WHERE album_id = '$albumId'");
+        $ret = $db->query("SELECT photo_id, photo_url FROM photo WHERE album_id = '$albumId'");
         while ($row = $ret->fetchArray()) {
-            array_push($albumPhotos, array('photoId' => $row['photo_id'], 'photoUrl' => $row['photo_url']));
+            $photo = array();
+            $photo['photoId'] = $row['photo_id'];
+            $photo['photoUrl'] = getPhotoURL($myUsername,$albumName,$row['photo_url']);
+            $imageSize = getimagesize(getPhotoURL($myUsername,$albumName,$row['photo_url']));
+            $photo['photoWHRate'] = $imageSize[0] / $imageSize[1];
+            array_push($albumPhotos, $photo);
         }
         $albumInfo['photos'] = $albumPhotos;
 
@@ -58,10 +72,6 @@ try {
 
             .uk-grid-margin {
                 margin-top: 30px !important;
-            }
-
-            .left-part {
-
             }
 
             .right-part {
@@ -105,6 +115,7 @@ try {
         <script src="../js/util/notification.js"></script>
         <script src="../js/util/imageHelper.js"></script>
         <script src="../js/util/labels.js"></script>
+        <script src="../js/util/waterfall.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/photoCard.js"></script>
         <script src="../js/component/topProgressBar.js"></script>
@@ -115,6 +126,7 @@ try {
             $('document').ready(function () {
                 topProgressBar.init();
 
+
                 //判断相册是否属于当前用户
                 if ('<?php echo $albumInfo['userId'] == $_SESSION['user_info']['user_id']?>' === '1') {
                     myAlbumMode();
@@ -123,26 +135,9 @@ try {
                     hisAlbumMode();
                 }
 
-                adapt($('#cover'));
+                loadPhotos();
 
-                if ($('#photoContainer').html() === '') {
-                    $('#photoContainer').html('<p>暂无照片</p>');
-                    $('body').append(
-                        $('<img id="pointer" class="uk-transition-toggle" src="../imgs/icon/hand_up.png" />')
-                            .css('width', '40px')
-                            .css('height', '40px')
-                            .css('z-index', '999')
-                            .css('position', 'absolute')
-                            .css('transition','0.5s')
-                            .offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5})
-                    );
-                    setInterval(function () {
-                        $('#pointer').offset({top: $('#addPhoto').offset().top + 25, left: $('#addPhoto').offset().left + 5});
-                        setTimeout(function () {
-                            $('#pointer').offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5});
-                        },500);
-                    }, 1000);
-                }
+                adapt($('#cover'));
 
             });
 
@@ -220,6 +215,7 @@ try {
                                                 <option>街拍</option>
                                                 <option>艺术</option>
                                            </select>`);
+                    $('#newLabel').val('<?php echo $albumInfo['label_chi']?>');
                     confirmBtn.show();
                     cancelBtn.show();
                 });
@@ -283,13 +279,36 @@ try {
                                             </div>`)
             }
 
-            function CreatePhoto(photoData) {
-                return $(`<div style="height: 150px" class="uk-text-center">
-                                <a class="uk-inline-clip uk-transition-toggle" href="photoContent.php?id=${photoData.id}">
-                                    <img class="uk-transition-scale-up uk-transition-opaque" src="${photoData.url}"/>
-
+            function loadPhotos() {
+                let photos = <?php echo json_encode($albumInfo['photos'])?>;
+                if (photos.length > 0) {
+                    $.each(photos, function (index, element) {
+                        let photo = $(`<div class="uk-margin-bottom uk-inline-clip uk-transition-toggle uk-text-center">
+                                <a href="photoContent.php?id=${element.photoId}">
+                                    <img style="width: ${$('#column1').width()}px; height: ${$('#column1').width() / element.photoWHRate}px;" class="uk-transition-scale-up uk-transition-opaque" src="${element.photoUrl}"/>
                                 </a>
                             </div>`);
+                        getShortestColumn($('#column1'), $('#column2'), $('#column3')).append(photo);
+                    });
+                }
+                else {
+                    $('#photoContainer').html('<p>暂无照片</p>');
+                    $('body').append(
+                        $('<img id="pointer" class="uk-transition-toggle" src="../imgs/icon/hand_up.png" />')
+                            .css('width', '40px')
+                            .css('height', '40px')
+                            .css('z-index', '999')
+                            .css('position', 'absolute')
+                            .css('transition', '0.5s')
+                            .offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5})
+                    );
+                    setInterval(function () {
+                        $('#pointer').offset({top: $('#addPhoto').offset().top + 25, left: $('#addPhoto').offset().left + 5});
+                        setTimeout(function () {
+                            $('#pointer').offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5});
+                        }, 500);
+                    }, 1000);
+                }
             }
         </script>
     </head>
@@ -322,7 +341,7 @@ try {
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
+                                    <li><a href="photoUpload.php"><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
                                     </li>
                                     <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
                                     </li>
@@ -387,7 +406,11 @@ try {
                         <img src="../imgs/icon/add.png"/>
                     </a>
                 </h4>
-                <div id="photoContainer" class="uk-grid-small uk-child-width-1-4" uk-grid></div>
+                <ul id="photoContainer" style="list-style: none" class="uk-child-width-1-3">
+                    <li id="column1" class="uk-float-left uk-padding-small"></li>
+                    <li id="column2" class="uk-float-left uk-padding-small"></li>
+                    <li id="column3" class="uk-float-left uk-padding-small"></li>
+                </ul>
             </section>
         </main>
         <footer>

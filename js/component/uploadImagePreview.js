@@ -63,4 +63,8 @@ class UploadImagePreview {
         });
         return previewContainer;
     }
+
+    getImages(){
+        return this.uploadFiles;
+    }
 }

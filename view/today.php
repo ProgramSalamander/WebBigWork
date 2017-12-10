@@ -22,6 +22,7 @@ $myUsername = $_COOKIE['username'];
         <script src="../js/util/notification.js"></script>
         <script src="../js/util/imageHelper.js"></script>
         <script src="../js/util/labels.js"></script>
+        <script src="../js/util/waterfall.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/photoCard.js"></script>
 
@@ -36,56 +37,60 @@ $myUsername = $_COOKIE['username'];
                             photoUrl: '../../imgs/index/bg1.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '人像',
-                            photoLabelClass: 'label-people'
+                            photoLabelClass: 'label-people',
+                            photoWHRate: 1.5
                         },
                         {
                             photoUrl: '../../imgs/girl.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '风景',
-                            photoLabelClass: 'label-scenery'
+                            photoLabelClass: 'label-scenery',
+                            photoWHRate: 0.66675
                         },
                         {
                             photoUrl: '../../imgs/index/bg1.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '人像',
-                            photoLabelClass: 'label-people'
+                            photoLabelClass: 'label-people',
+                            photoWHRate: 1.5
                         },
                         {
                             photoUrl: '../../imgs/index/bg1.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '风景',
-                            photoLabelClass: 'label-scenery'
+                            photoLabelClass: 'label-scenery',
+                            photoWHRate: 1.5
                         },
                         {
                             photoUrl: '../../imgs/index/bg1.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '动物',
-                            photoLabelClass: 'label-animal'
+                            photoLabelClass: 'label-animal',
+                            photoWHRate: 1.5
                         },
                         {
                             photoUrl: '../../imgs/index/bg1.jpg',
                             photoAuthor: '徐杨晨',
                             photoLabel: '风景',
-                            photoLabelClass: 'label-scenery'
+                            photoLabelClass: 'label-scenery',
+                            photoWHRate: 1.5
+                        },
+                        {
+                            photoUrl: '../../imgs/girl.jpg',
+                            photoAuthor: '徐杨晨',
+                            photoLabel: '风景',
+                            photoLabelClass: 'label-scenery',
+                            photoWHRate: 0.66675
                         }
                     ];
+
                     $.each(hotData, function (index, item) {
-                        getShortestColumn().append(new PhotoCard(item).render());
+                        let photoCard = new PhotoCard(item, $('#column1').width());
+                        getShortestColumn($('#column1'),$('#column2'),$('#column3'),$('#column4')).append(photoCard.render());
                     });
                 }
 
-                function getShortestColumn() {
-                    let list = [$('#column1'), $('#column2'), $('#column3'), $('#column4')];
-                    let index = 0;
-                    let height = list[index].height();
-                    for (let i = 1; i < list.length; i++) {
-                        if (list[i].height() < height) {
-                            index = i;
-                            height = list[i].height();
-                        }
-                    }
-                    return list[index];
-                }
+
 
             });
         </script>
@@ -119,7 +124,7 @@ $myUsername = $_COOKIE['username'];
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
                                 <ul class="uk-nav uk-navbar-dropdown-nav">
-                                    <li><a href=""><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
+                                    <li><a href="photoUpload.php"><span class="uk-icon" uk-icon="icon:image"></span>上传照片</a>
                                     </li>
                                     <li><a href="homepage.php?username=<?php echo $myUsername ?>"><span class="uk-icon" uk-icon="icon:home"></span>我的主页</a>
                                     </li>

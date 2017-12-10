@@ -80,23 +80,48 @@ try {
                     }
                 });
 
+                //拖拽上传
                 UIkit.upload('.js-upload');
-                // UIkit.util.on('.js-upload', 'upload', function (e, files) {
-                //     console.log(files);
-                // });
 
                 //上传图片预览
-                if (window.FileReader) {
-                    $('#preview').append(new UploadImagePreview($('#photoUpload'), topProgressBar).render());
-                }
-                else {
-                    $('#preview').append('<p class="uk-width-2-3">对不起，您的浏览器暂时不支持图片上传预览</p>')
-                }
+                let uploadPreview = new UploadImagePreview($('#photoUpload'), topProgressBar);
+                $('#preview').append(uploadPreview.render());
 
+                $('#submit').click(function (ev) {
+                    ev.preventDefault();
+                    let formData = new FormData();
+                    formData.append('callFunc', 'addPhoto');
+                    formData.append('albumName', $('#destAlbum').val());
 
+                    //FormData添加多文件的核心
+                    $.each(uploadPreview.getImages(),function (index, element) {
+                        formData.append('file[]', element);
+                    });
 
-                $('#submit').click(function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: '../php/photo.php',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 200) {
+                                notification(data.msg, 'success');
+                                setTimeout(function () {
+                                    window.location.href = `../view/albumContent.php?an=${$('#destAlbum').val()}&ui=<?php echo $myUserId?>`;
+                                }, 500);
+                            }
+                            else {
+                                notification(data.msg, 'danger');
+                            }
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            notification('网络异常，请稍候再试。', 'warning');
+                        }
 
+                    });
                 });
             });
 
@@ -159,7 +184,7 @@ try {
                         <span uk-icon="icon: cloud-upload"></span>
                         <span class="uk-text-middle">拖动图片至此或者</span>
                         <div uk-form-custom>
-                            <input id="photoUpload" type="file"  accept="image/jpeg" multiple="multiple">
+                            <input id="photoUpload" type="file" name="file[]" accept="image/jpeg" multiple="multiple">
                             <span class="uk-link">选择图片</span>
                         </div>
                     </div>
@@ -172,7 +197,7 @@ try {
             </section>
         </main>
         <footer>
-            <div style="bottom: 0px;" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+            <div style="bottom: 0;" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
                 <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
             </div>
         </footer>
