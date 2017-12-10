@@ -42,18 +42,13 @@ try {
         <link rel="stylesheet" href="../css/photo.css"/>
 
         <style>
-            .uk-form-label{
+            .uk-form-label {
                 text-align: center;
                 font-size: 1rem;
             }
 
-            form{
+            form {
                 border-bottom: 1px solid lightgray;
-            }
-
-            #preview{
-                height: 300px;
-                overflow: scroll;
             }
         </style>
 
@@ -66,6 +61,7 @@ try {
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/photoCard.js"></script>
         <script src="../js/component/topProgressBar.js"></script>
+        <script src="../js/component/uploadImagePreview.js"></script>
 
         <script>
             let topProgressBar = new TopProgressBar();
@@ -84,8 +80,23 @@ try {
                     }
                 });
 
-                $('#photoUpload').on('change', function () {
-                   $('#preview').show();
+                UIkit.upload('.js-upload');
+                // UIkit.util.on('.js-upload', 'upload', function (e, files) {
+                //     console.log(files);
+                // });
+
+                //上传图片预览
+                if (window.FileReader) {
+                    $('#preview').append(new UploadImagePreview($('#photoUpload'), topProgressBar).render());
+                }
+                else {
+                    $('#preview').append('<p class="uk-width-2-3">对不起，您的浏览器暂时不支持图片上传预览</p>')
+                }
+
+
+
+                $('#submit').click(function () {
+
                 });
             });
 
@@ -144,11 +155,11 @@ try {
                             <select class="uk-form-width-medium uk-select" id="destAlbum" name="destAlbum"></select>
                         </div>
                     </div>
-                    <div class="uk-margin uk-placeholder uk-text-center">
+                    <div class="js-upload uk-margin uk-placeholder uk-text-center">
                         <span uk-icon="icon: cloud-upload"></span>
                         <span class="uk-text-middle">拖动图片至此或者</span>
                         <div uk-form-custom>
-                            <input id="photoUpload" type="file" accept="image/jpeg" multiple>
+                            <input id="photoUpload" type="file"  accept="image/jpeg" multiple="multiple">
                             <span class="uk-link">选择图片</span>
                         </div>
                     </div>
@@ -157,110 +168,11 @@ try {
                     </div>
                 </form>
             </section>
-            <section class="uk-margin uk-margin-remove-top uk-flex uk-flex-center">
-                <div id="preview" class="uk-width-2-3 uk-child-width-1-4 uk-grid-small" uk-grid>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="uk-position-relative uk-overflow-hidden uk-text-center">
-                        <div style="height: 140px" class="uk-inline-clip uk-transition-toggle uk-light" title="girl.jpg" uk-tooltip>
-                            <img class="photo-high" src="../imgs/girl.jpg"/>
-                            <div class="uk-position-center">
-                                <span class="uk-transition-fade uk-icon" uk-icon="icon:close; ratio: 2"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <section id="preview" class="uk-margin uk-margin-remove-top uk-flex uk-flex-center">
             </section>
-
         </main>
         <footer>
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-bottom">
+            <div style="bottom: 0px;" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
                 <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
             </div>
         </footer>
