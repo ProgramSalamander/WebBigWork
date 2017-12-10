@@ -8,9 +8,12 @@ $headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
 
 $todayHotPhotos = array();
+$todayStars = array();
 try {
     $db = getDB();
-    $ret = $db->query("SELECT p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l WHERE p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id ORDER BY p.photo_likes, p.photo_comments DESC LIMIT 10");
+
+    //获取今日热门作品
+    $ret = $db->query("SELECT p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l WHERE date(p.add_time) = date() AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id ORDER BY p.photo_likes, p.photo_comments DESC LIMIT 10");
     while ($row = $ret->fetchArray()) {
         $photo = array();
         $photo['photoUrl'] = getPhotoURL($row['username'], $row['album_name'], $row['photo_url']);
@@ -18,6 +21,17 @@ try {
         $photo['label_chi'] = $row['label_chi_name'];
         $photo['label_eng'] = $row['label_eng_name'];
         array_push($todayHotPhotos, $photo);
+    }
+
+    //获取今日明星
+    $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, sum(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND date(l.record_time) = date() AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
+    while ($row = $ret->fetchArray()) {
+        $star = array();
+        $star['headPicUrl'] = $row['head_pic_url'];
+        $star['username'] = $row['username'];
+        $star['nickname'] = $row['nick_name'];
+        $star['todayLikes'] = $row['today_likes'];
+        array_push($todayStars, $star);
     }
 } catch (Exception $e) {
     header('location: error.php');
