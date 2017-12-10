@@ -21,13 +21,14 @@ $albumInfo = array('name' => $_GET['an'], 'userId' => $_GET['ui']);
 
 try {
     $db = getDB();
-    $ret = $db->query("SELECT a.album_id, a.cover_url,l.label_chi_name, l.label_eng_name, u.nick_name  FROM album AS a, label AS l, user AS u WHERE a.album_name = '$albumName' AND a.user_id = '$albumUserId' AND a.label_id = l.label_id AND a.user_id = u.user_id;");
+    $ret = $db->query("SELECT a.album_id, a.cover_url,l.label_chi_name, l.label_eng_name, u.username, u.nick_name  FROM album AS a, label AS l, user AS u WHERE a.album_name = '$albumName' AND a.user_id = '$albumUserId' AND a.label_id = l.label_id AND a.user_id = u.user_id;");
     if ($row = $ret->fetchArray()) {
         $albumInfo['id'] = $row['album_id'];
         $albumInfo['coverUrl'] = getAlbumURL($row['cover_url']);
         $albumInfo['label_chi'] = $row['label_chi_name'];
         $albumInfo['label_eng'] = $row['label_eng_name'];
         $albumInfo['author'] = $row['nick_name'];
+        $albumInfo['username'] = $row['username'];
 
         $albumId = $albumInfo['id'];
         $albumPhotos = array();
@@ -35,8 +36,8 @@ try {
         while ($row = $ret->fetchArray()) {
             $photo = array();
             $photo['photoId'] = $row['photo_id'];
-            $photo['photoUrl'] = getPhotoURL($myUsername,$albumName,$row['photo_url']);
-            $imageSize = getimagesize(getPhotoURL($myUsername,$albumName,$row['photo_url']));
+            $photo['photoUrl'] = getPhotoURL($albumInfo['username'],$albumName,$row['photo_url']);
+            $imageSize = getimagesize(getPhotoURL($albumInfo['username'],$albumName,$row['photo_url']));
             $photo['photoWHRate'] = $imageSize[0] / $imageSize[1];
             array_push($albumPhotos, $photo);
         }
