@@ -18,7 +18,7 @@ $myUserId = $_SESSION['user_info']['user_id'];
 <html lang="zh">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 专注于约拍的网站</title>
+        <title>iPaiPai - 专注于摄影社交的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" type="text/css" href="../css/today.css">
         <link rel="stylesheet" type="text/css" href="../css/photo.css">

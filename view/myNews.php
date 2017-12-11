@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 专注于约拍的网站</title>
+        <title>iPaiPai - 专注于摄影社交的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" href="../css/today.css"/>
         <link rel="stylesheet" href="../css/friendsNews.css"/>
