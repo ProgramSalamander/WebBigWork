@@ -410,10 +410,12 @@ try {
                         <img src="../imgs/icon/like.svg"/>
                     </button>
                 </div>
-                <div id="photoContainer" uk-lightbox>
-                    <a href="<?php echo $photoInfo['photoUrl'] ?>">
-                        <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
-                    </a>
+                <div class="uk-flex uk-flex-center">
+                    <div id="photoContainer" uk-lightbox>
+                        <a href="<?php echo $photoInfo['photoUrl'] ?>">
+                            <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
+                        </a>
+                    </div>
                 </div>
             </section>
             <section class="uk-margin-left uk-padding uk-padding-remove-right uk-flex uk-flex-right">
