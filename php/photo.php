@@ -37,11 +37,13 @@ if (isset($_POST['callFunc'])) {
                         //不再添加同名文件
                         if (!file_exists(getPhotoURL($username, $destAlbumName, $photoUrl))) {
                             move_uploaded_file($_FILES['file']['tmp_name'][$i], getPhotoURL($username, $destAlbumName, $photoUrl));
-                            $db->exec("INSERT INTO photo(album_id, add_time, photo_url) VALUES ((SELECT album_id FROM album WHERE album_name = '$destAlbumName'),'$date','$photoUrl')");
+
+                            //注：图片标签默认为所属的相册标签
+                            $db->exec("INSERT INTO photo(album_id, add_time, photo_url, label_id) VALUES ((SELECT album_id FROM album WHERE user_id = '$userId' AND album_name = '$destAlbumName'),'$date','$photoUrl',(SELECT album.label_id FROM album WHERE user_id = '$userId' AND album_name = '$destAlbumName'))");
                         }
                     }
                     $ret = $db->query("SELECT photo_id FROM photo WHERE album_id = (SELECT album_id FROM album WHERE album_name = '$destAlbumName') AND add_time = '$date'");
-                    while ($row = $ret->fetchArray()){
+                    while ($row = $ret->fetchArray()) {
                         $photoId = $row['photo_id'];
                         $db->exec("INSERT INTO photos_of_news(news_id, photo_id) VALUES ('$newsId','$photoId')");
                     }
@@ -51,6 +53,53 @@ if (isset($_POST['callFunc'])) {
                     echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
                 }
 
+            } else {
+                echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
+            }
+            break;
+        case 'modifyPhoto':
+            if (isset($_POST['id']) && isset($_POST['newLabel'])) {
+                $photoId = $_POST['id'];
+                $newLabel = $_POST['newLabel'];
+
+                try {
+                    $db = getDB();
+                    $ret = $db->exec("UPDATE photo SET label_id = (SELECT label_id FROM label WHERE label_chi_name = '$newLabel') WHERE photo_id = '$photoId'");
+                    if ($ret) {
+                        echo json_encode(array('code' => 200, 'msg' => '图片信息修改成功！'));
+                    } else {
+                        echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                    }
+                } catch (Exception $e) {
+                    echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                }
+            } else {
+                echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
+            }
+            break;
+        case 'deletePhoto':
+            if (isset($_POST['id'])) {
+                $photoId = $_POST['id'];
+                $photoUrl = $_POST['url'];
+                try {
+                    $db = getDB();
+
+                    //删除照片相关的评论
+                    $db->exec("DELETE FROM like_comment_record WHERE photo_id = '$photoId'");
+
+                    //删除相关动态中的照片
+                    $db->exec("DELETE FROM photos_of_news WHERE photo_id = '$photoId'");
+
+                    //删除照片数据
+                    $db->exec("DELETE FROM photo WHERE photo_id = '$photoId'");
+
+                    //删除图片
+                    unlink($photoUrl);
+
+                    echo json_encode(array('code' => 200, 'msg' => '图片删除成功！'));
+                } catch (Exception $e) {
+                    echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                }
             } else {
                 echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
             }

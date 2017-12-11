@@ -41,7 +41,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             }
 
             #manage {
-                width: 1100px;
+                width: 1110px;
                 height: 600px;
                 background: white;
                 border: 2px solid #333333;

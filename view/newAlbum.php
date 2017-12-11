@@ -192,9 +192,6 @@ $myUserId = $_SESSION['user_info']['user_id'];
             </section>
         </main>
         <footer>
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-bottom">
-                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
-            </div>
         </footer>
     </body>
 </html>

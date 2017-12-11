@@ -160,9 +160,6 @@ try {
             </section>
         </main>
         <footer>
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
-                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
-            </div>
         </footer>
     </body>
 </html>

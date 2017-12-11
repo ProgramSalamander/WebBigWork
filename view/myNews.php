@@ -68,9 +68,6 @@
             </section>
         </main>
         <footer>
-            <div style="bottom: 0" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
-                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
-            </div>
         </footer>
     </body>
     <script src="../js/component/friendNews.js"></script>

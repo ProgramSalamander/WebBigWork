@@ -11,6 +11,7 @@ session_start();
 checkSignIn();
 
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
 
 if (!isset($_GET['an']) || !isset($_GET['ui'])) {
     header('location: error.php');
@@ -32,7 +33,7 @@ try {
 
         $albumId = $albumInfo['id'];
         $albumPhotos = array();
-        $ret = $db->query("SELECT photo_id, photo_url FROM photo WHERE album_id = '$albumId'");
+        $ret = $db->query("SELECT photo_id, photo_url FROM photo WHERE album_id = '$albumId' ORDER BY add_time DESC");
         while ($row = $ret->fetchArray()) {
             $photo = array();
             $photo['photoId'] = $row['photo_id'];
@@ -82,10 +83,6 @@ try {
             #addPhoto {
                 display: none;
                 vertical-align: text-top;
-            }
-
-            #addPhoto input {
-                display: none;
             }
 
             #addPhoto img {
@@ -224,6 +221,7 @@ try {
                 confirmBtn.click(function () {
                     topProgressBar.end();
 
+                    let newName = $('#newName').val();
                     $.ajax({
                         type: 'POST',
                         url: '../php/album.php',
@@ -231,7 +229,7 @@ try {
                             callFunc: 'modifyInfo',
                             id: '<?php echo $albumId?>',
                             oldName: '<?php echo $albumInfo['name']?>',
-                            newName: $('#newName').val(),
+                            newName: newName,
                             newLabel: $('#newLabel').val()
                         },
                         dataType: 'json',
@@ -239,7 +237,7 @@ try {
                             if (data.code === 200) {
                                 notification(data.msg, 'success');
                                 topProgressBar.end(function () {
-                                    window.location.reload();
+                                    window.location.href = `albumContent.php?an=${newName}&ui=<?php echo $myUserId?>`;
                                 });
                             } else {
                                 notification(data.msg, 'danger');
@@ -419,9 +417,6 @@ try {
             </section>
         </main>
         <footer>
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
-                <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
-            </div>
         </footer>
     </body>
 </html>

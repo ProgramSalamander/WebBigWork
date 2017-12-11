@@ -6,7 +6,7 @@ class UploadImagePreview {
     }
 
     render() {
-        let previewContainer = $(`<div style="height: 300px; overflow: scroll" class="uk-width-2-3 uk-child-width-1-4 uk-grid-small" uk-grid></div>`);
+        let previewContainer = $(`<div class="uk-width-2-3 uk-child-width-1-4 uk-grid-small" uk-grid></div>`);
         let progressBar = this.progressBar;
 
         let uploadFiles = this.uploadFiles;
