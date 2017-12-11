@@ -127,6 +127,16 @@ EOF;
                 //主页头像设置
                 $('#homePageHeadPic').attr('src', '<?php echo $myHeadPicUrl ?>');
 
+
+                //头像修改
+                $('#headPicContainer').html(`<a class="js-head-pic-upload">
+                                <input id="upload" type="file" accept="image/jpeg">
+                                <img id="homePageHeadPic" src="<?php echo $homepageHeadPicUrl?>"/>
+                                <div class="uk-position-center">
+                                    <span class="uk-transition-fade">修改头像</span>
+                                </div>
+                            </a>`);
+
                 $('#upload').on('change', function () {
                     let formData = new FormData();
                     formData.append('file', $('#upload')[0].files[0]);
@@ -159,14 +169,6 @@ EOF;
 
                     });
                 });
-                //头像修改
-                $('#headPicContainer').html(`<a class="js-head-pic-upload">
-                                <input id="upload" type="file" accept="image/jpeg">
-                                <img id="homePageHeadPic" src="<?php echo $homepageHeadPicUrl?>"/>
-                                <div class="uk-position-center">
-                                    <span class="uk-transition-fade">修改头像</span>
-                                </div>
-                            </a>`);
 
                 UIkit.upload('.js-head-pic-upload', {
                     multiple: false,
