@@ -27,8 +27,29 @@ function checkSignIn()
 function getUserInfo($username,
     $password)
 {
-    $db = getDB();
-    $ret = $db->query("SELECT * FROM user WHERE username = '$username' AND password = '$password'");
-    return $ret->fetchArray();
+    try {
+        $db = getDB();
+        $ret = $db->query("SELECT * FROM user WHERE username = '$username' AND password = '$password'");
+        return $ret->fetchArray();
+    } catch (Exception $e) {
+        header("location:error.php");
+    }
 }
 
+
+function isFollowed($myUserId, $userId)
+{
+    try {
+        $db = getDB();
+        $ret = $db->query("SELECT * FROM follow WHERE user_id = '$myUserId' AND follow_id = '$userId'");
+        if ($ret->fetchArray()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } catch (Exception $e) {
+        header("location:error.php");
+    }
+
+}

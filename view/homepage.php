@@ -7,7 +7,9 @@ checkSignIn();
 $myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
 $homepageUsername = $_GET['username'];
+$homepageId = 0;
 $homepageHeadPicUrl = '';
 $homepageNickname = '';
 $homepageSign = '';
@@ -23,6 +25,7 @@ try {
     $row = $ret->fetchArray();
     if ($row) {
         $homepageNickname = $row['nick_name'];
+        $homepageId = $row['user_id'];
         $homepageHeadPicUrl = getHeadPicURL($row['head_pic_url']);
         $homepageSign = $row['user_sign'];
         $homepageTotalPhotos = $row['total_photos'];
@@ -31,7 +34,7 @@ try {
 
         $ret = $db->query("SELECT album.album_id, album.user_id, album.album_name, album.cover_url FROM album, user WHERE user.username = '$homepageUsername' AND user.user_id = album.user_id ");
         while ($row = $ret->fetchArray()) {
-            array_push($homepageAlbums, array('id' => $row['album_id'],'userId' => $row['user_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
+            array_push($homepageAlbums, array('id' => $row['album_id'], 'userId' => $row['user_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
         }
 
         $sql = <<<EOF
@@ -268,7 +271,53 @@ EOF;
 
                 $('#editNicknameBtn').hide();
                 $('#editSignBtn').hide();
+
+                $('#followContainer').show();
+
+                let isFollowed = ('<?php echo isFollowed($myUserId, $homepageId)?>' === '1');
+                console.log(isFollowed);
+                toggleFollowButton(isFollowed);
+
+                $('#followButton').click(function (ev) {
+                    ev.preventDefault();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '../php/followUser.php',
+                        data: {
+                            myId: '<?php echo $myUserId?>',
+                            followId: '<?php echo $homepageId?>',
+                            state: isFollowed
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 200){
+                                notification(data.msg, 'success');
+                                isFollowed = !isFollowed;
+                                toggleFollowButton(isFollowed);
+                            }
+                            else {
+                                notification(data.msg, 'danger');
+                            }
+                        },
+                        error: function (data) {
+                            notification('网络异常，请稍候再试','warning');
+                        }
+                    });
+                });
             }
+
+            function toggleFollowButton(isFollowed) {
+                if (isFollowed) {
+                    $('#followButton').attr('title', '不再获取Ta的动态').html(`<img src="../imgs/icon/like_active.svg"/>
+                            <span>取消关注</span>`);
+                }
+                else {
+                    $('#followButton').attr('title', '实时获取Ta的动态！').html(`<img src="../imgs/icon/like.svg"/>
+                            <span>关注</span>`);
+                }
+            }
+
 
             function loadAlbums() {
                 let albums = <?php echo json_encode($homepageAlbums)?>;
@@ -337,7 +386,7 @@ EOF;
         <main class="uk-padding-large uk-padding-remove-top uk-padding-remove-bottom">
             <section class="uk-padding uk-padding-remove-bottom">
                 <div uk-grid>
-                    <div class="uk-width-expand">
+                    <div class="uk-width-1-2">
                         <div id="headPicContainer" style="overflow: hidden; position: relative"
                              class="uk-margin-top uk-align-left uk-width-small uk-height-small uk-border-circle uk-inline-clip uk-transition-toggle uk-light"
                              uk-form-custom>
@@ -359,10 +408,18 @@ EOF;
                             <a id="saveSignCancelBtn" class="uk-icon" uk-icon="icon:close" title="取消" uk-tooltip></a>
                         </div>
                     </div>
-                    <div class="uk-padding-small uk-align-center uk-margin-large-right">
-                        <p>总作品数：<span id="totalWorks" class="uk-badge"><?php echo $homepageTotalPhotos ?></span></p>
-                        <p>获得喜欢总数：<span id="totalLikes" class="uk-badge"><?php echo $homepageTotalLikes ?></span></p>
-                        <p>获得评论总数：<span id="totalComments" class="uk-badge"><?php echo $homepageTotalComments ?></span></p>
+                    <div class="uk-padding-small uk-align-center">
+                        <div>
+                            <p>总作品数：<span id="totalWorks" class="uk-badge"><?php echo $homepageTotalPhotos ?></span></p>
+                            <p>获得喜欢总数：<span id="totalLikes" class="uk-badge"><?php echo $homepageTotalLikes ?></span></p>
+                            <p>获得评论总数：<span id="totalComments" class="uk-badge"><?php echo $homepageTotalComments ?></span></p>
+                        </div>
+                    </div>
+                    <div style="display: none" id="followContainer" class="uk-padding uk-align-center">
+                        <button id="followButton" class="uk-button uk-button-default" uk-tooltip>
+                            <img src="../imgs/icon/like.svg"/>
+                            <span>关注</span>
+                        </button>
                     </div>
                 </div>
                 <h3 class="uk-margin">常用标签</h3>
