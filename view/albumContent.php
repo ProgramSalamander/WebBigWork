@@ -44,10 +44,18 @@ try {
         }
         $albumInfo['photos'] = $albumPhotos;
 
-        $ret = $db->query("SELECT sum(photo_likes) AS album_likes, sum(photo_comments) AS album_comments FROM photo WHERE album_id = '$albumId'");
+        //获取相册总喜欢数
+        $ret = $db->query("SELECT count(*) AS album_likes FROM photo AS p, like_comment_record AS r WHERE p.album_id = '$albumId' AND r.type = 'l' AND p.photo_id = r.photo_id");
         if ($row = $ret->fetchArray()) {
-            $albumInfo['likes'] = isset($row['album_likes']) ? $row['album_likes'] : 0;
-            $albumInfo['comments'] = isset($row['album_comments']) ? $row['album_comments'] : 0;
+            $albumInfo['likes'] = $row['album_likes'];
+        } else {
+            header('location:error.php');
+        }
+
+        //获取相册总评论数
+        $ret = $db->query("SELECT count(*) AS album_comments FROM photo AS p, like_comment_record AS r WHERE p.album_id = '$albumId' AND r.type = 'c' AND p.photo_id = r.photo_id");
+        if ($row = $ret->fetchArray()) {
+            $albumInfo['comments'] = $row['album_comments'];
         } else {
             header('location:error.php');
         }

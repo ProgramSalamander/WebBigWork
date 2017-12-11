@@ -13,11 +13,12 @@ try {
     $db = getDB();
 
     //获取今日热门作品
-    $ret = $db->query("SELECT p.photo_id,p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l WHERE date(p.add_time) = date() AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id ORDER BY p.photo_likes, p.photo_comments DESC LIMIT 10");
+    $ret = $db->query("SELECT p.photo_id,p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l, like_comment_record AS r WHERE date(p.add_time) = date() AND p.photo_id = r.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id GROUP BY p.photo_id ORDER BY count(record_id) DESC LIMIT 10");
     while ($row = $ret->fetchArray()) {
         $photo = array();
         $photo['photoId'] = $row['photo_id'];
         $photo['photoUrl'] = getPhotoURL($row['username'], $row['album_name'], $row['photo_url']);
+        $photo['photoUsername'] = $row['username'];
         $photo['photoAuthor'] = $row['nick_name'];
         $photo['photoLabel'] = $row['label_chi_name'];
         $photo['photoLabelClass'] = 'label-'.$row['label_eng_name'];
@@ -26,7 +27,7 @@ try {
     }
 
     //获取今日人气明星
-    $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, sum(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND date(l.record_time) = date() AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
+    $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, count(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND date(l.record_time) = date() AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
     while ($row = $ret->fetchArray()) {
         $star = array();
         $star['headPicUrl'] = getHeadPicURL($row['head_pic_url']);
@@ -75,18 +76,19 @@ try {
 
                 function loadTodayStar() {
                     let starData = <?php echo json_encode($todayStars)?>;
-                    for (let i = 0; i < starData.length; i++){
+                    for (let i = 0; i < starData.length; i++) {
                         let star = $(`<div class="uk-position-relative uk-position-center uk-text-center">
-                            <a href="homepage.php?username=${starData[i].username}" class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
-                                <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="${starData[i].headPicURL}"/>
+                            <a style="width: 150px; height:150px;position: relative; overflow: hidden" href="homepage.php?username=${starData[i].username}" class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque" src="${starData[i].headPicUrl}"/>
                             </a>
                             <p>${starData[i].nickname}</p>
                             <p>今日获得喜欢总数：<span class="uk-badge like-badge">${starData[i].todayLikes}</span></p>
                         </div>`);
-                        if (i === 0){
+                        adapt(star.find('img'));
+                        if (i === 0) {
                             $('#first').append(star.append($('<img class="top3-icon" src="../imgs/today/star_first.png"/>')));
                         }
-                        else if (i === 1){
+                        else if (i === 1) {
                             $('#second').append(star.append($('<img class="top3-icon" src="../imgs/today/star_second.png"/>')));
                         }
                         else {

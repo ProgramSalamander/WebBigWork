@@ -130,6 +130,28 @@ if (isset($_POST['callFunc'])) {
                 } catch (Exception $e) {
                     echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
                 }
+            }else {
+                echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
+            }
+            break;
+        case 'addComment':
+            if (isset($_POST['id']) && isset($_POST['content'])) {
+                $photoId = $_POST['id'];
+                $commentContent = $_POST['content'];
+                try {
+                    $db = getDB();
+                    $ret = $db->exec("INSERT INTO like_comment_record(type, record_time, photo_id, user_id, record_content) VALUES ('c',datetime(),'$photoId','$userId','$commentContent')");
+                    if ($ret){
+                        echo json_encode(array('code' => 200, 'msg' => '评论成功！'));
+                    }
+                    else{
+                        echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                    }
+                } catch (Exception $e) {
+                    echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                }
+            } else {
+                echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
             }
             break;
         default:

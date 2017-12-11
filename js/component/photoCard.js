@@ -15,7 +15,7 @@ class PhotoCard {
                         </div>\
                         <div class="uk-grid-small uk-padding-small" uk-grid>\
                             <div class="uk-width-auto">\
-                                <span class="uk-icon" uk-icon="icon: user"></span><a class="uk-text-small" title="去ta的主页" uk-tooltip>${this.data.photoAuthor}</a>\
+                                <span class="uk-icon" uk-icon="icon: user"></span><a href="homepage.php?username=${this.data.photoUsername}" class="uk-text-small" title="去ta的主页" uk-tooltip>${this.data.photoAuthor}</a>\
                             </div>\
                             <div class="uk-width-expand uk-text-center">\
                                 <span class="uk-label">${this.data.photoLabel}</span>\

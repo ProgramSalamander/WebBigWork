@@ -27,20 +27,33 @@ $photoComments = array();
 try {
     $db = getDB();
 
-    //获取照片信息数据
-    $ret = $db->query("SELECT p.photo_url, p.photo_likes, p.photo_comments, u.user_id, u.username, u.nick_name, a.album_name, l.label_chi_name,l.label_eng_name FROM photo AS p,album AS a, label AS l, user AS u WHERE p.photo_id = '$photoId' AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id;");
+    //获取照片基本信息数据
+    $ret = $db->query("SELECT p.photo_url, u.user_id, u.username, u.nick_name, a.album_name, l.label_chi_name,l.label_eng_name FROM photo AS p,album AS a, label AS l, user AS u WHERE p.photo_id = '$photoId' AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id;");
     if ($row = $ret->fetchArray()) {
         $photoInfo['photoUrl'] = getPhotoURL($row['username'], $row['album_name'], $row['photo_url']);
         $photoInfo['authorId'] = $row['user_id'];
         $photoInfo['authorName'] = $row['nick_name'];
         $photoInfo['authorUsername'] = $row['username'];
-        $photoInfo['photoLikes'] = $row['photo_likes'];
-        $photoInfo['photoComments'] = $row['photo_comments'];
         $photoInfo['photoAlbumName'] = $row['album_name'];
         $photoInfo['photoWHRate'] = getPhotoWHRate($photoInfo['photoUrl']);
         $photoInfo['photoLabel'] = $row['label_chi_name'];
         $photoInfo['photoLabelClass'] = $row['label_eng_name'];
 
+        //获取照片喜欢数
+        $ret = $db->query("SELECT count(*) AS likes FROM like_comment_record WHERE photo_id = '$photoId' AND type = 'l'");
+        if ($row = $ret->fetchArray()) {
+            $photoInfo['photoLikes'] = $row['likes'];
+        } else {
+            $photoInfo['photoLikes'] = 0;
+        }
+
+        //获取照片评论数
+        $ret = $db->query("SELECT count(*) AS comments FROM like_comment_record WHERE photo_id = '$photoId' AND type = 'c'");
+        if ($row = $ret->fetchArray()) {
+            $photoInfo['photoComments'] = $row['comments'];
+        } else {
+            $photoInfo['photoComments'] = 0;
+        }
 
         //获取照片是否已喜欢
         $ret = $db->query("SELECT * FROM like_comment_record WHERE type='l' AND photo_id = '$photoId' AND user_id = '$myUserId'");
@@ -132,6 +145,38 @@ try {
                 else {
                     hisPhotoMode();
                 }
+
+                //评论照片
+                adapt($('#addCommentContainer').find('img'));
+                $('#addComment').click(function (ev) {
+                    ev.preventDefault();
+                    topProgressBar.start();
+                    $.ajax({
+                        type: 'POST',
+                        url: '../php/photo.php',
+                        data: {
+                            callFunc: 'addComment',
+                            id: '<?php echo $photoId?>',
+                            content: $('#content').val()
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 200) {
+                                notification(data.msg, 'success');
+                                topProgressBar.end(function () {
+                                    window.location.reload();
+                                });
+                            }
+                            else {
+                                notification(data.msg, 'danger');
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            notification("网络异常，请稍候再试。", 'warning');
+                        }
+                    });
+                });
 
                 loadComments();
             });
@@ -283,7 +328,32 @@ try {
             }
 
             function loadComments() {
-
+                let comments = <?php echo json_encode($photoComments)?>;
+                let commentContainer = $('#commentContainer');
+                $.each(comments, function (index, element) {
+                    let comment = $(`<li class="uk-padding-small">
+                                                <article class="uk-card uk-card-default uk-padding-small uk-padding-remove-left" uk-grid>
+                                                    <div class="uk-grid uk-grid-medium" uk-grid>
+                                                        <div class="uk-width-auto">
+                                                            <div style="width: 60px;height: 60px;overflow: hidden" class="uk-border-circle">
+                                                                <img src="${element.userHeadPicUrl}" alt="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="uk-width-1-2">
+                                                            <h4 class="uk-h4 uk-margin-remove"><a href="homepage.php?username=${element.username}" style="text-decoration: none" class="uk-button-text">${element.userNickname}</a></h4>
+                                                            <div class="uk-comment-meta uk-subnav uk-margin-remove-top">
+                                                                <span class="uk-width-large">${element.time}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="uk-margin uk-margin-remove-bottom uk-width-1-1">
+                                                        ${element.content}
+                                                    </div>
+                                                </article>
+                                            </li>`);
+                    adapt(comment.find('img'));
+                    commentContainer.append(comment);
+                });
             }
 
             function toggleLikeButton(isLike) {
@@ -392,74 +462,26 @@ try {
                             <span class="uk-badge badge-comment"><?php echo $photoInfo['photoComments'] ?></span>
                         </div>
                     </div>
-                    <h4>照片评论
-                        <a id="addComment" href="" title="添加评论" uk-tooltip>
-                            <img src="../imgs/icon/add.png"/>
-                        </a></h4>
+                    <h4>照片评论</h4>
                     <ul class="uk-list" id="commentContainer">
-                        <li class="uk-padding-small">
-                            <article class="uk-card uk-card-default uk-padding-small uk-padding-remove-horizontal uk-comment" uk-grid>
-                                <div class="uk-comment-header uk-grid uk-grid-medium uk-flex-middle" uk-grid>
+                        <li id="addCommentContainer" class="uk-padding-small">
+                            <article class="uk-card uk-card-default uk-padding-small uk-padding-remove-left" uk-grid>
+                                <div class="uk-grid uk-grid-medium" uk-grid>
                                     <div class="uk-width-auto">
-                                        <div style="width: 50px;height: 50px"
-                                             class="uk-overflow-hidden uk-border-circle uk-position-relative uk-display-inline-block">
-                                            <img class="uk-comment-avatar photo-high" src="../imgs/girl.jpg" alt="">
+                                        <div style="width: 60px;height: 60px;overflow: hidden;" class="uk-border-circle">
+                                            <img src="<?php echo getHeadPicURL($_SESSION['user_info']['head_pic_url']) ?>" alt="">
                                         </div>
                                     </div>
-                                    <div class="uk-width-expand">
-                                        <h4 class="uk-comment-title uk-margin-remove"><a style="text-decoration: none" class="uk-button-text"
-                                                                                         href="#">Author</a></h4>
+                                    <div class="uk-width-1-2">
+                                        <h4 class="uk-h4 uk-margin-remove"><a style="text-decoration: none" class="uk-button-text"><?php echo $_SESSION['user_info']['nick_name']?></a></h4>
                                         <div class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                            <span>12 days ago</span>
+                                            <span class="uk-width-large">现在</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="uk-comment-body uk-margin-remove uk-width-1-1">
-                                    我觉得很好看！
-                                </div>
-                            </article>
-                        </li>
-                        <li class="uk-padding-small">
-                            <article class="uk-card uk-card-default uk-padding-small uk-padding-remove-horizontal uk-comment" uk-grid>
-                                <div class="uk-comment-header uk-grid uk-grid-medium uk-flex-middle" uk-grid>
-                                    <div class="uk-width-auto">
-                                        <div style="width: 50px;height: 50px"
-                                             class="uk-overflow-hidden uk-border-circle uk-position-relative uk-display-inline-block">
-                                            <img class="uk-comment-avatar photo-high" src="../imgs/girl.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="uk-width-expand">
-                                        <h4 class="uk-comment-title uk-margin-remove"><a style="text-decoration: none" class="uk-button-text"
-                                                                                         href="#">Author</a></h4>
-                                        <div class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                            <span>12 days ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="uk-comment-body uk-margin-remove uk-width-1-1">
-                                    我觉得很好看！
-                                </div>
-                            </article>
-                        </li>
-                        <li class="uk-padding-small">
-                            <article class="uk-card uk-card-default uk-padding-small uk-padding-remove-horizontal uk-comment" uk-grid>
-                                <div class="uk-comment-header uk-grid uk-grid-medium uk-flex-middle" uk-grid>
-                                    <div class="uk-width-auto">
-                                        <div style="width: 50px;height: 50px"
-                                             class="uk-overflow-hidden uk-border-circle uk-position-relative uk-display-inline-block">
-                                            <img class="uk-comment-avatar photo-high" src="../imgs/girl.jpg" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="uk-width-expand">
-                                        <h4 class="uk-comment-title uk-margin-remove"><a style="text-decoration: none" class="uk-button-text"
-                                                                                         href="#">Author</a></h4>
-                                        <div class="uk-comment-meta uk-subnav uk-margin-remove-top">
-                                            <span>12 days ago</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="uk-comment-body uk-margin-remove uk-width-1-1">
-                                    我觉得很好看！
+                                <div class="uk-margin uk-margin-remove-bottom uk-width-1-1">
+                                    <textarea id="content" class="uk-textarea" autofocus="autofocus" maxlength="50" placeholder="长度在50字以内"></textarea>
+                                    <button id="addComment" class="uk-align-right uk-margin uk-button uk-button-primary">发表</button>
                                 </div>
                             </article>
                         </li>

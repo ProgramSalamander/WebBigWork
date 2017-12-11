@@ -28,15 +28,39 @@ try {
         $homepageId = $row['user_id'];
         $homepageHeadPicUrl = getHeadPicURL($row['head_pic_url']);
         $homepageSign = $row['user_sign'];
-        $homepageTotalPhotos = $row['total_photos'];
-        $homepageTotalLikes = $row['total_likes'];
-        $homepageTotalComments = $row['total_comments'];
 
+        //获取总作品数
+        $ret = $db->query("SELECT count(*) AS total_photos FROM photo AS p, album AS a, user AS u WHERE u.user_id = '$homepageId' AND a.user_id = u.user_id AND p.album_id = a.album_id");
+        if ($row = $ret->fetchArray()) {
+            $homepageTotalPhotos = $row['total_photos'];
+        } else {
+            $homepageTotalPhotos = 0;
+        }
+
+        //获取总喜欢数
+        $ret = $db->query("SELECT count(*) AS total_likes FROM photo AS p, album AS a, user AS u, like_comment_record AS l WHERE u.user_id = '$homepageId' AND l.type = 'l' AND a.user_id = u.user_id AND p.album_id = a.album_id AND p.photo_id = l.photo_id");
+        if ($row = $ret->fetchArray()) {
+            $homepageTotalLikes = $row['total_likes'];
+        } else {
+            $homepageTotalLikes = 0;
+        }
+
+
+        //获取总评论数
+        $ret = $db->query("SELECT count(*) AS total_comments FROM photo AS p, album AS a, user AS u, like_comment_record AS l WHERE u.user_id = '$homepageId' AND l.type = 'c' AND a.user_id = u.user_id AND p.album_id = a.album_id AND p.photo_id = l.photo_id");
+        if ($row = $ret->fetchArray()) {
+            $homepageTotalComments = $row['total_comments'];
+        } else {
+            $homepageTotalComments = 0;
+        }
+
+        //获取相册信息
         $ret = $db->query("SELECT album.album_id, album.user_id, album.album_name, album.cover_url FROM album, user WHERE user.username = '$homepageUsername' AND user.user_id = album.user_id ");
         while ($row = $ret->fetchArray()) {
             array_push($homepageAlbums, array('id' => $row['album_id'], 'userId' => $row['user_id'], 'name' => $row['album_name'], 'coverUrl' => getAlbumURL($row['cover_url'])));
         }
 
+        //获取常用标签
         $sql = <<<EOF
             SELECT DISTINCT label.label_chi_name, label.label_eng_name 
             FROM photo,album,user,label 
@@ -84,7 +108,6 @@ EOF;
                 let uri = new URI();
 
                 topProgressBar.init();
-
 
                 loadLabels();
                 loadAlbums();
@@ -290,7 +313,7 @@ EOF;
                         },
                         dataType: 'json',
                         success: function (data) {
-                            if (data.code === 200){
+                            if (data.code === 200) {
                                 notification(data.msg, 'success');
                                 isFollowed = !isFollowed;
                                 toggleFollowButton(isFollowed);
@@ -300,7 +323,7 @@ EOF;
                             }
                         },
                         error: function (data) {
-                            notification('网络异常，请稍候再试','warning');
+                            notification('网络异常，请稍候再试', 'warning');
                         }
                     });
                 });
@@ -309,7 +332,7 @@ EOF;
             function toggleFollowButton(isFollowed) {
                 if (isFollowed) {
                     $('#followButton').attr('title', '不再获取Ta的动态').html(`<img src="../imgs/icon/like_active.svg"/>
-                            <span>取消关注</span>`);
+                            <span>已关注</span>`);
                 }
                 else {
                     $('#followButton').attr('title', '实时获取Ta的动态！').html(`<img src="../imgs/icon/like.svg"/>
