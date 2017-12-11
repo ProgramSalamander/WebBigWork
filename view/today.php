@@ -29,7 +29,7 @@ try {
     $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, sum(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND date(l.record_time) = date() AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
     while ($row = $ret->fetchArray()) {
         $star = array();
-        $star['headPicUrl'] = $row['head_pic_url'];
+        $star['headPicUrl'] = getHeadPicURL($row['head_pic_url']);
         $star['username'] = $row['username'];
         $star['nickname'] = $row['nick_name'];
         $star['todayLikes'] = $row['today_likes'];
@@ -62,6 +62,7 @@ try {
         <script>
             $('document').ready(function () {
                 loadTodayHot();
+                loadTodayStar();
 
                 function loadTodayHot() {
                     let hotData = <?php echo json_encode($todayHotPhotos)?>;
@@ -72,7 +73,28 @@ try {
                     });
                 }
 
+                function loadTodayStar() {
+                    let starData = <?php echo json_encode($todayStars)?>;
+                    for (let i = 0; i < starData.length; i++){
+                        let star = $(`<div class="uk-position-relative uk-position-center uk-text-center">
+                            <a href="homepage.php?username=${starData[i].username}" class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
+                                <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="${starData[i].headPicURL}"/>
+                            </a>
+                            <p>${starData[i].nickname}</p>
+                            <p>今日获得喜欢总数：<span class="uk-badge like-badge">${starData[i].todayLikes}</span></p>
+                        </div>`);
+                        if (i === 0){
+                            $('#first').append(star.append($('<img class="top3-icon" src="../imgs/today/star_first.png"/>')));
+                        }
+                        else if (i === 1){
+                            $('#second').append(star.append($('<img class="top3-icon" src="../imgs/today/star_second.png"/>')));
+                        }
+                        else {
+                            $('#third').append(star.append($('<img class="top3-icon" src="../imgs/today/star_third.png"/>')));
+                        }
+                    }
 
+                }
             });
         </script>
     </head>
@@ -131,37 +153,9 @@ try {
             <section id="todayStar" class="uk-padding uk-padding-remove-top uk-position-relative">
                 <h2 class="uk-position-relative uk-position-top-center">人气明星</h2>
                 <div class="uk-padding uk-grid uk-child-width-1-3" uk-grid>
-                    <div id="second">
-                        <div class="uk-position-relative uk-position-center uk-text-center">
-                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
-                                <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
-                            </div>
-                            <p>徐梓航</p>
-                            <p>今日获得喜欢总数：<span class="uk-badge like-badge">512</span></p>
-                            <img class="top3-icon" src="../imgs/today/star_second.png"/>
-                        </div>
-                    </div>
-                    <div id="first">
-                        <div class="uk-position-relative uk-position-center uk-text-center">
-                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
-                                <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
-                            </div>
-                            <p>徐杨晨</p>
-                            <p>今日获得喜欢总数：<span class="uk-badge like-badge">1024</span></p>
-                            <img class="top3-icon" src="../imgs/today/star_first.png"/>
-                        </div>
-                    </div>
-                    <div id="third">
-                        <div class="uk-position-relative uk-position-center uk-text-center">
-                            <div class="uk-border-circle uk-inline-clip uk-transition-toggle" title="去Ta的主页" uk-tooltip>
-                                <img class="uk-transition-scale-up uk-transition-opaque top3-head-pic" src="../imgs/index/bg4.jpg"/>
-                            </div>
-                            <p>薛恺丰</p>
-                            <p>今日获得喜欢总数：<span class="uk-badge like-badge">256</span></p>
-                            <img class="top3-icon" src="../imgs/today/star_third.png"/>
-
-                        </div>
-                    </div>
+                    <div id="second"></div>
+                    <div id="first"></div>
+                    <div id="third"></div>
                 </div>
             </section>
         </main>
