@@ -34,6 +34,7 @@ function getUserInfo($username,
     } catch (Exception $e) {
         header("location:error.php");
     }
+    return null;
 }
 
 
@@ -51,5 +52,5 @@ function isFollowed($myUserId, $userId)
     } catch (Exception $e) {
         header("location:error.php");
     }
-
+    return null;
 }

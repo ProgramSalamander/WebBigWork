@@ -11,7 +11,6 @@
         <script src="../js/lib/uikit.min.js"></script>
         <script src="../js/lib/uikit-icons.min.js"></script>
         <script src="../js/lib/URI.min.js"></script>
-        <script src="../js/util/cookie.js"></script>
         <script src="../js/util/notification.js"></script>
     </head>
     <body>
@@ -53,23 +52,23 @@
             <div class="uk-section side-bar uk-visible@l">
                 <ul class="uk-nav uk-nav-default">
                     <li>
-                        <a href="friendsNews.php">好友动态</a>
+                        <a href="friendsNews.php">关注动态</a>
                     </li>
                     <li class="uk-active">
                         <a href="">我的动态</a>
                     </li>
                     <li>
-                        <a href="friendsManage.php">好友管理</a>
+                        <a href="friendsManage.php">关注管理</a>
                     </li>
                 </ul>
             </div>
             <section>
-                <div id="friendsNewsContainer" class="uk-flex uk-flex-center">
+                <div id="myNewsContainer" class="uk-flex uk-flex-center">
                 </div>
             </section>
         </main>
-        <footer style="display: none">
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+        <footer>
+            <div style="bottom: 0" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
                 <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
             </div>
         </footer>

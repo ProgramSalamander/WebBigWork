@@ -275,7 +275,6 @@ EOF;
                 $('#followContainer').show();
 
                 let isFollowed = ('<?php echo isFollowed($myUserId, $homepageId)?>' === '1');
-                console.log(isFollowed);
                 toggleFollowButton(isFollowed);
 
                 $('#followButton').click(function (ev) {

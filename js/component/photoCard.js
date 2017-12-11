@@ -9,7 +9,7 @@ class PhotoCard {
         let photoCard = $(`<div class="uk-card uk-card-hover uk-card-default uk-margin-bottom">\
                         <div>\
                             <div class="uk-inline-clip uk-transition-toggle">\
-                                <a href=""><img style="width: ${this.width}px; height: ${this.width / this.data.photoWHRate}px;" class="uk-transition-scale-up uk-transition-opaque"\
+                                <a href="photoContent.php?id=${this.data.photoId}"><img style="width: ${this.width}px; height: ${this.width / this.data.photoWHRate}px;" class="uk-transition-scale-up uk-transition-opaque"\
                                                                      src="${this.data.photoUrl}"></a>\
                             </div>\
                         </div>\

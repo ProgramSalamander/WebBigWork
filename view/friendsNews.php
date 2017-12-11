@@ -69,13 +69,13 @@ $myUsername = $_COOKIE['username'];
             <section class="uk-section side-bar uk-visible@l">
                 <ul class="uk-nav uk-nav-default">
                     <li class="uk-active">
-                        <a href="">好友动态</a>
+                        <a href="">关注动态</a>
                     </li>
                     <li>
                         <a href="myNews.php">我的动态</a>
                     </li>
                     <li>
-                        <a href="friendsManage.php">好友管理</a>
+                        <a href="friendsManage.php">关注管理</a>
                     </li>
                 </ul>
             </section>
@@ -89,8 +89,8 @@ $myUsername = $_COOKIE['username'];
                 </div>
             </section>
         </main>
-        <footer style="display: none">
-            <div class="uk-background-secondary uk-light uk-text-center uk-position-relative">
+        <footer>
+            <div style="bottom: 0" class="uk-background-secondary uk-light uk-text-center uk-position-relative">
                 <p class="uk-position-center">©2017 Xyc. All rights reserved.</p>
             </div>
         </footer>

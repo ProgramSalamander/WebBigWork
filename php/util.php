@@ -17,3 +17,8 @@ function getAlbumURL($url){
 function getPhotoURL($username, $albumName, $url){
     return '../database/imgs/albums/'.$username.'/'.$albumName.'/'.$url;
 }
+
+function getPhotoWHRate($photoUrl){
+    $size = getimagesize($photoUrl);
+    return $size[0] / $size[1];
+}

@@ -6,6 +6,38 @@ checkSignIn();
 
 $headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $username = $_COOKIE['username'];
+
+$photos = array();
+try {
+    $db = getDB();
+    $ret = null;
+
+    //是否指定标签
+    if (!isset($_GET['label'])) {
+        $ret = $db->query("SELECT p.photo_id, p.photo_url, u.username, u.nick_name,a.album_name, l.label_chi_name, l.label_eng_name FROM photo AS p,album AS a,user AS u, label AS l WHERE p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id ORDER BY p.add_time DESC ");
+    } else {
+        $label = $_GET['label'];
+        $ret = $db->query("SELECT p.photo_id, p.photo_url, u.username, u.nick_name,a.album_name, l.label_chi_name, l.label_eng_name FROM photo AS p,album AS a,user AS u, label AS l WHERE l.label_eng_name = '$label' AND p.label_id = l.label_id AND p.album_id = a.album_id AND a.user_id = u.user_id  ORDER BY p.add_time DESC ");
+    }
+
+    if ($ret) {
+        while ($row = $ret->fetchArray()) {
+            $photo = array();
+            $photo['photoId'] = $row['photo_id'];
+            $photo['photoUrl'] = getPhotoURL($row['username'], $row['album_name'], $row['photo_url']);
+            $photo['photoAuthor'] = $row['nick_name'];
+            $photo['photoLabel'] = $row['label_chi_name'];
+            $photo['photoLabelClass'] = 'label-'.$row['label_eng_name'];
+            $photo['photoWHRate'] = getPhotoWHRate($photo['photoUrl']);
+            array_push($photos, $photo);
+        }
+    } else {
+        header('location:error.php');
+    }
+} catch (Exception $e) {
+    header('location:error.php');
+}
+
 ?>
 <html lang="zh">
     <head>
@@ -14,6 +46,7 @@ $username = $_COOKIE['username'];
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" type="text/css" href="../css/today.css">
         <link rel="stylesheet" type="text/css" href="../css/ground.css">
+        <link rel="stylesheet" type="text/css" href="../css/label.css">
         <link rel="stylesheet" type="text/css" href="../css/photo.css">
 
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
@@ -22,218 +55,33 @@ $username = $_COOKIE['username'];
         <script src="../js/lib/URI.min.js"></script>
         <script src="../js/util/labels.js"></script>
         <script src="../js/util/imageHelper.js"></script>
+        <script src="../js/util/waterfall.js"></script>
         <script src="../js/component/photoCard.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
 
         <script>
             $('document').ready(function () {
                 let labelArr = getLabelEngArray();
+
                 let uri = new URI();
+
+                if (!uri.search(true).label) {
+                    $('.ground-filter').children('li')[0].className = 'uk-active';
+                }
+
                 $.each(labelArr, function (index, element) {
                     if (element === uri.search(true).label) {
-                        $('.ground-filter').children('li')[index].className = 'uk-active';
+                        $('.ground-filter').children('li')[index + 1].className = 'uk-active';
                     }
+
+
                 });
 
-                let photoData = [
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                        photoLabelClass: 'label-people'
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }, {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    },
-                    {
-                        photoUrl: '../../imgs/index/bg1.jpg',
-                        photoAuthor: '徐杨晨',
-                        photoLabel: '人像',
-                    }];
+                let photoData = <?php echo json_encode($photos)?>;
 
                 $.each(photoData, function (index, element) {
-                    let photo = new PhotoCard(element);
-                    $('.ground-container').children('div').get(index % 4).appendChild(photo.render().get(0));
+                    let photo = new PhotoCard(element, $('#column1').width());
+                    getShortestColumn($('#column1'), $('#column2'), $('#column3'), $('#column4')).append(photo.render());
                 });
             })
         </script>
@@ -283,6 +131,7 @@ $username = $_COOKIE['username'];
             <div class="uk-display-inline-block uk-position-fixed uk-card uk-card-default uk-margin-left uk-margin-top">
                 <h6 class="uk-card-header uk-text-center uk-margin-remove-bottom">类型</h6>
                 <ul class="uk-card-body uk-nav uk-nav-default uk-flex-left uk-child-width-auto ground-filter">
+                    <li><a href="?">综合</a></li>
                     <li><a href="?label=people">人像</a></li>
                     <li><a href="?label=scenery">风景</a></li>
                     <li><a href="?label=animal">动物</a></li>
@@ -293,24 +142,15 @@ $username = $_COOKIE['username'];
                 </ul>
             </div>
             <div class="uk-flex uk-flex-right">
-                <div class="uk-padding uk-grid-small uk-child-width-expand ground-container" uk-grid>
-                    <div id="column1">
-
-                    </div>
-                    <div id="column2">
-
-                    </div>
-                    <div id="column3">
-
-                    </div>
-                    <div id="column4">
-
-                    </div>
-                </div>
+                <ul style="list-style: none" class="uk-child-width-1-4 ground-container">
+                    <li id="column1" class="uk-float-left uk-padding-small"></li>
+                    <li id="column2" class="uk-float-left uk-padding-small"></li>
+                    <li id="column3" class="uk-float-left uk-padding-small"></li>
+                    <li id="column4" class="uk-float-left uk-padding-small"></li>
+                </ul>
             </div>
         </main>
         <footer>
-
         </footer>
     </body>
 </html>

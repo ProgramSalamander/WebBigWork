@@ -36,8 +36,8 @@ try {
         while ($row = $ret->fetchArray()) {
             $photo = array();
             $photo['photoId'] = $row['photo_id'];
-            $photo['photoUrl'] = getPhotoURL($albumInfo['username'],$albumName,$row['photo_url']);
-            $imageSize = getimagesize(getPhotoURL($albumInfo['username'],$albumName,$row['photo_url']));
+            $photo['photoUrl'] = getPhotoURL($albumInfo['username'], $albumName, $row['photo_url']);
+            $imageSize = getimagesize(getPhotoURL($albumInfo['username'], $albumName, $row['photo_url']));
             $photo['photoWHRate'] = $imageSize[0] / $imageSize[1];
             array_push($albumPhotos, $photo);
         }
@@ -268,7 +268,26 @@ try {
                     cancelBtn.hide();
                     confirmBtn.hide();
                     editBtn.show();
-                })
+                });
+
+                //提示添加图片
+                if ('<?php echo count($albumPhotos) ?>' == 0) {
+                    $('body').append(
+                        $('<img id="pointer" class="uk-transition-toggle" src="../imgs/icon/hand_up.png" />')
+                            .css('width', '40px')
+                            .css('height', '40px')
+                            .css('z-index', '999')
+                            .css('position', 'absolute')
+                            .css('transition', '0.5s')
+                            .offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5})
+                    );
+                    setInterval(function () {
+                        $('#pointer').offset({top: $('#addPhoto').offset().top + 25, left: $('#addPhoto').offset().left + 5});
+                        setTimeout(function () {
+                            $('#pointer').offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5});
+                        }, 500);
+                    }, 1000);
+                }
             }
 
             function hisAlbumMode() {
@@ -277,7 +296,7 @@ try {
                                                 <a href="<?php echo $albumInfo['coverUrl']?>">
                                                     <img id="cover" src="<?php echo $albumInfo['coverUrl']?>"/>
                                                 </a>
-                                            </div>`)
+                                            </div>`);
             }
 
             function loadPhotos() {
@@ -294,21 +313,6 @@ try {
                 }
                 else {
                     $('#photoContainer').html('<p>暂无照片</p>');
-                    $('body').append(
-                        $('<img id="pointer" class="uk-transition-toggle" src="../imgs/icon/hand_up.png" />')
-                            .css('width', '40px')
-                            .css('height', '40px')
-                            .css('z-index', '999')
-                            .css('position', 'absolute')
-                            .css('transition', '0.5s')
-                            .offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5})
-                    );
-                    setInterval(function () {
-                        $('#pointer').offset({top: $('#addPhoto').offset().top + 25, left: $('#addPhoto').offset().left + 5});
-                        setTimeout(function () {
-                            $('#pointer').offset({top: $('#addPhoto').offset().top + 50, left: $('#addPhoto').offset().left + 5});
-                        }, 500);
-                    }, 1000);
                 }
             }
         </script>
