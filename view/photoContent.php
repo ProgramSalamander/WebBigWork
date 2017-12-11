@@ -11,6 +11,7 @@ session_start();
 checkSignIn();
 
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
 
 if (!isset($_GET['id'])) {
     header('location: error.php');
@@ -39,6 +40,15 @@ try {
         $photoInfo['photoWHRate'] = getPhotoWHRate($photoInfo['photoUrl']);
         $photoInfo['photoLabel'] = $row['label_chi_name'];
         $photoInfo['photoLabelClass'] = $row['label_eng_name'];
+
+
+        //获取照片是否已喜欢
+        $ret = $db->query("SELECT * FROM like_comment_record WHERE type='l' AND photo_id = '$photoId' AND user_id = '$myUserId'");
+        if ($ret->fetchArray()) {
+            $photoInfo['isAlreadyLike'] = true;
+        } else {
+            $photoInfo['isAlreadyLike'] = false;
+        }
 
         //获取照片评论
         $ret = $db->query("SELECT r.record_content,r.record_time, u.username, u.nick_name, u.head_pic_url FROM like_comment_record AS r, user AS u WHERE r.photo_id = '$photoId' AND r.type = 'c' AND r.user_id = u.user_id ORDER BY r.record_time");
@@ -212,28 +222,28 @@ try {
                 deleteBtn.show().click(function () {
                     UIkit.modal.confirm('确定要删除这张照片吗？').then(function () {
                         $.ajax({
-                           type: 'POST',
-                           url: '../php/photo.php',
-                           data: {
-                               callFunc: 'deletePhoto',
-                               id: '<?php echo $photoId?>',
-                               url: '<?php echo $photoInfo['photoUrl']?>'
-                           },
+                            type: 'POST',
+                            url: '../php/photo.php',
+                            data: {
+                                callFunc: 'deletePhoto',
+                                id: '<?php echo $photoId?>',
+                                url: '<?php echo $photoInfo['photoUrl']?>'
+                            },
                             dataType: 'json',
                             success: function (data) {
-                                if (data.code === 200){
+                                if (data.code === 200) {
                                     notification(data.msg, 'success');
                                     topProgressBar.end(function () {
-                                       window.location.href = 'albumContent.php?an=<?php echo $photoInfo['photoAlbumName']?>&ui=<?php echo $photoInfo['authorId']?>';
+                                        window.location.href = 'albumContent.php?an=<?php echo $photoInfo['photoAlbumName']?>&ui=<?php echo $photoInfo['authorId']?>';
                                     });
                                 }
-                                else{
+                                else {
                                     notification(data.msg, 'danger');
                                 }
                             },
                             error: function (error) {
-                               console.log(error);
-                                notification("网络异常，请稍候再试",'warning');
+                                console.log(error);
+                                notification("网络异常，请稍候再试", 'warning');
                             }
                         });
                     });
@@ -241,9 +251,34 @@ try {
             }
 
             function hisPhotoMode() {
+
+                let isLike = '<?php echo $photoInfo['isAlreadyLike']?>' === '1';
+                toggleLikeButton(isLike);
+
                 //可以喜欢他人的照片
                 $('#likeButton').show().click(function () {
-
+                    $.ajax({
+                        type: 'POST',
+                        url: '../php/photo.php',
+                        data: {
+                            callFunc: 'likePhoto',
+                            id: '<?php echo $photoId?>',
+                            isAlreadyLike: isLike
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code === 200) {
+                                notification(data.msg, 'success');
+                                isLike = !isLike;
+                                toggleLikeButton(isLike);
+                            } else {
+                                notification(data.msg, 'danger');
+                            }
+                        },
+                        error: function (error) {
+                            notification('网络传输异常，请重试。', 'warning');
+                        }
+                    });
                 });
             }
 
@@ -251,6 +286,14 @@ try {
 
             }
 
+            function toggleLikeButton(isLike) {
+                if (isLike) {
+                    $('#likeButton').html('<img src="../imgs/icon/like_active.svg"/>');
+                }
+                else {
+                    $('#likeButton').html('<img src="../imgs/icon/like.svg"/>');
+                }
+            }
 
         </script>
     </head>

@@ -48,7 +48,7 @@ if (isset($_POST['callFunc'])) {
                         $db->exec("INSERT INTO photos_of_news(news_id, photo_id) VALUES ('$newsId','$photoId')");
                     }
 
-                    echo json_encode(array('code' => 200, 'msg' => '图片上传成功！'));
+                    echo json_encode(array('code' => 200, 'msg' => '照片上传成功！'));
                 } catch (Exception $e) {
                     echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
                 }
@@ -66,7 +66,7 @@ if (isset($_POST['callFunc'])) {
                     $db = getDB();
                     $ret = $db->exec("UPDATE photo SET label_id = (SELECT label_id FROM label WHERE label_chi_name = '$newLabel') WHERE photo_id = '$photoId'");
                     if ($ret) {
-                        echo json_encode(array('code' => 200, 'msg' => '图片信息修改成功！'));
+                        echo json_encode(array('code' => 200, 'msg' => '照片信息修改成功！'));
                     } else {
                         echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
                     }
@@ -78,7 +78,7 @@ if (isset($_POST['callFunc'])) {
             }
             break;
         case 'deletePhoto':
-            if (isset($_POST['id'])) {
+            if (isset($_POST['id']) && isset($_POST['url'])) {
                 $photoId = $_POST['id'];
                 $photoUrl = $_POST['url'];
                 try {
@@ -96,12 +96,40 @@ if (isset($_POST['callFunc'])) {
                     //删除图片
                     unlink($photoUrl);
 
-                    echo json_encode(array('code' => 200, 'msg' => '图片删除成功！'));
+                    echo json_encode(array('code' => 200, 'msg' => '照片删除成功！'));
                 } catch (Exception $e) {
                     echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
                 }
             } else {
                 echo json_encode(array('code' => 404, 'msg' => '数据传输异常，请稍候再试。'));
+            }
+            break;
+        case 'likePhoto':
+            if (isset($_POST['id']) && isset($_POST['isAlreadyLike'])) {
+                $photoId = $_POST['id'];
+                $isAlreadyLike = $_POST['isAlreadyLike'];
+                try {
+                    $db = getDB();
+                    //未喜欢
+                    if ($isAlreadyLike === 'false') {
+                        $ret = $db->exec("INSERT INTO like_comment_record(type, record_time, photo_id, user_id) VALUES ('l',datetime(),'$photoId','$userId')");
+                        if ($ret) {
+                            echo json_encode(array('code' => 200, 'msg' => '喜欢成功！'));
+                        } else {
+                            echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                        }
+                    } //已喜欢
+                    else {
+                        $ret = $db->exec("DELETE FROM like_comment_record WHERE type = 'l' AND user_id = '$userId' AND photo_id = '$photoId'");
+                        if ($ret) {
+                            echo json_encode(array('code' => 200, 'msg' => '已取消喜欢！'));
+                        } else {
+                            echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                        }
+                    }
+                } catch (Exception $e) {
+                    echo json_encode(array('code' => 404, 'msg' => '服务器异常，请稍候再试。'));
+                }
             }
             break;
         default:
