@@ -58,12 +58,16 @@ try {
         <script src="../js/util/waterfall.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/photoCard.js"></script>
+        <script src="../js/component/searchBox.js"></script>
 
 
         <script>
+
             $('document').ready(function () {
                 loadTodayHot();
                 loadTodayStar();
+
+                new SearchBox($('#searchBoxContainer')).init();
 
                 function loadTodayHot() {
                     let hotData = <?php echo json_encode($todayHotPhotos)?>;
@@ -108,14 +112,7 @@ try {
                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
-                    <div>
-                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
-                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
-                            <form class="uk-search uk-search-navbar uk-width-1-1">
-                                <input class="uk-search-input" type="search" placeholder="搜索用户/标签..." autofocus>
-                            </form>
-                        </div>
-                    </div>
+                    <div id="searchBoxContainer"></div>
                     <ul class="uk-navbar-nav">
                         <li class="uk-active"><a href="">今日推荐</a></li>
                         <li><a href="activity.php">约拍</a></li>

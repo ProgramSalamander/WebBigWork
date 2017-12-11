@@ -23,6 +23,8 @@ $myUsername = $_COOKIE['username'];
         <script src="../js/util/notification.js"></script>
         <script src="../js/util/imageHelper.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
+        <script src="../js/component/searchBox.js"></script>
+
     </head>
     <body>
         <header>
@@ -32,14 +34,7 @@ $myUsername = $_COOKIE['username'];
                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
-                    <div>
-                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
-                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
-                            <form class="uk-search uk-search-navbar uk-width-1-1">
-                                <input class="uk-search-input" type="search" placeholder="搜索用户/标签..." autofocus>
-                            </form>
-                        </div>
-                    </div>
+                    <div id="searchBoxContainer"></div>
                     <ul class="uk-navbar-nav">
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">约拍</a></li>
@@ -94,7 +89,10 @@ $myUsername = $_COOKIE['username'];
     </body>
     <script src="../js/component/friendNews.js"></script>
     <script>
+
         $('document').ready(function () {
+
+            new SearchBox($('#searchBoxContainer')).init();
 
             let newsData = [{
                 friendHeadPicUrl: '../imgs/index/bg4.jpg',

@@ -84,7 +84,7 @@ try {
 <html lang="zh">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 专注于摄影社交的网站</title>
+        <title>iPaiPai - 专注于约拍的网站</title>
         <link rel="stylesheet" href="../css/uikit.min.css"/>
         <link rel="stylesheet" href="../css/today.css"/>
         <link rel="stylesheet" href="../css/label.css"/>
@@ -129,12 +129,14 @@ try {
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/photoCard.js"></script>
         <script src="../js/component/topProgressBar.js"></script>
+        <script src="../js/component/searchBox.js"></script>
 
         <script>
             let topProgressBar = new TopProgressBar();
 
             $('document').ready(function () {
                 topProgressBar.init();
+                new SearchBox($('#searchBoxContainer')).init();
 
                 adaptPhoto();
 
@@ -375,14 +377,7 @@ try {
                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
-                    <div>
-                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
-                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
-                            <form class="uk-search uk-search-navbar uk-width-1-1">
-                                <input class="uk-search-input" type="search" placeholder="搜索用户/标签..." autofocus>
-                            </form>
-                        </div>
-                    </div>
+                    <div id="searchBoxContainer"></div>
                     <ul class="uk-navbar-nav">
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">约拍</a></li>
@@ -409,16 +404,16 @@ try {
             </nav>
         </header>
         <main>
-            <section class="uk-position-fixed uk-padding uk-width-2-3">
+            <section class="uk-position-fixed uk-padding-large uk-padding-remove-top uk-width-2-3">
+                <div class="uk-flex uk-flex-center uk-margin-top uk-margin-bottom">
+                    <button id="likeButton" class="uk-button uk-button-default" title="喜欢" uk-tooltip>
+                        <img src="../imgs/icon/like.svg"/>
+                    </button>
+                </div>
                 <div id="photoContainer" uk-lightbox>
                     <a href="<?php echo $photoInfo['photoUrl'] ?>">
                         <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
                     </a>
-                </div>
-                <div class="uk-flex uk-flex-center uk-margin">
-                    <button id="likeButton" class="uk-button uk-button-default" title="喜欢" uk-tooltip>
-                        <img src="../imgs/icon/like.svg"/>
-                    </button>
                 </div>
             </section>
             <section class="uk-margin-left uk-padding uk-padding-remove-right uk-flex uk-flex-right">

@@ -52,12 +52,15 @@ $myUserId = $_SESSION['user_info']['user_id'];
         <script src="../js/util/checkInput.js"></script>
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/topProgressBar.js"></script>
+        <script src="../js/component/searchBox.js"></script>
 
         <script>
             let topProgressBar = new TopProgressBar();
-            topProgressBar.init();
 
             $('document').ready(function () {
+                topProgressBar.init();
+                new SearchBox($('#searchBoxContainer')).init();
+
                 //标签加载
                 $.each(getLabelChiArray(), function (index, element) {
                     $('#albumLabel').append($(`<option>${element}</option>`));
@@ -70,7 +73,7 @@ $myUserId = $_SESSION['user_info']['user_id'];
                 });
 
                 $("#submit").click(function () {
-                    if (checkAlbumName($('#albumName').val())){
+                    if (checkAlbumName($('#albumName').val())) {
                         let formData = new FormData();
                         formData.append('file', $('#coverUpload')[0].files[0]);
                         formData.append('callFunc', 'addAlbum');
@@ -92,7 +95,7 @@ $myUserId = $_SESSION['user_info']['user_id'];
                                     });
                                     notification(data.msg, 'success');
                                     setTimeout(function () {
-                                        window.location.href = '../view/albumContent.php?an='+encodeURI($('#albumName').val())+'&ui=<?php echo $myUserId?>';
+                                        window.location.href = '../view/albumContent.php?an=' + encodeURI($('#albumName').val()) + '&ui=<?php echo $myUserId?>';
                                     }, 1000);
                                 }
                                 else {
@@ -122,14 +125,7 @@ $myUserId = $_SESSION['user_info']['user_id'];
                                                                              uk-icon="icon: happy; ratio: 2"></span>iPaiPai</a>
                 </div>
                 <div class="uk-navbar-right">
-                    <div>
-                        <a class="uk-navbar-toggle" uk-search-icon href="#"></a>
-                        <div class="uk-drop" uk-drop="mode: click; pos: left-center; offset: 0">
-                            <form class="uk-search uk-search-navbar uk-width-1-1">
-                                <input class="uk-search-input" type="search" placeholder="搜索用户/标签..." autofocus>
-                            </form>
-                        </div>
-                    </div>
+                    <div id="searchBoxContainer"></div>
                     <ul class="uk-navbar-nav">
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">约拍</a></li>
