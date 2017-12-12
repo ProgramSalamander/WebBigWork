@@ -406,21 +406,21 @@ try {
         </header>
         <main>
             <section class="uk-position-fixed uk-padding-large uk-padding-remove-top uk-width-2-3">
-                <div class="uk-flex uk-flex-center uk-margin-top uk-margin-bottom">
+                <div class="uk-flex uk-flex-center uk-margin-top uk-margin-small-bottom">
                     <button id="likeButton" class="uk-button uk-button-default" title="喜欢" uk-tooltip>
                         <img src="../imgs/icon/like.svg"/>
                     </button>
                 </div>
-                <div class="uk-flex uk-flex-center uk-text-center">
-                    <div class="uk-inline-clip uk-transition-toggle">
-                        <div id="photoContainer" uk-lightbox>
+                <div class="uk-flex uk-flex-center uk-text-center uk-position-relative">
+                    <div id="photoContainer" uk-lightbox>
+                        <div class="uk-inline-clip uk-transition-toggle">
                             <a href="<?php echo $photoInfo['photoUrl'] ?>">
-                                <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
+                                <img style="max-height: 550px" src="<?php echo $photoInfo['photoUrl'] ?>"/>
+                                <div class="uk-position-center uk-transition-fade uk-overlay uk-overlay-default">
+                                    <div class="uk-transition-slide-top-small"><h4 class="uk-margin-remove">查看</h4></div>
+                                    <div class="uk-transition-slide-bottom-small"><h4 class="uk-margin-remove">大图</h4></div>
+                                </div>
                             </a>
-                        </div>
-                        <div class="uk-position-center uk-transition-fade uk-overlay uk-overlay-default">
-                            <div class="uk-transition-slide-top-small"><h4 class="uk-margin-remove">查看</h4></div>
-                            <div class="uk-transition-slide-bottom-small"><h4 class="uk-margin-remove">大图</h4></div>
                         </div>
                     </div>
                 </div>

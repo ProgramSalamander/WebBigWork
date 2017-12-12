@@ -38,15 +38,17 @@ try {
             array_push($news['photos'], array('photoId' => $subrow['photo_id'], 'photoUrl' => $subrow['photo_url']));
         }
 
-        $tempPhotoId = $news['photos'][0]['photoId'];
-        $subret = $db->query("SELECT a.album_name,u.user_id ,u.username, u.nick_name, u.head_pic_url FROM photo AS p, album AS a, user AS u WHERE p.photo_id = '$tempPhotoId' AND p.album_id = a.album_id AND a.user_id = u.user_id");
-        if ($subrow = $subret->fetchArray()) {
-            $news['newsAlbumName'] = $subrow['album_name'];
-            $news['newsAuthorId'] = $subrow['user_id'];
-            $news['newsAuthorUsername'] = $subrow['username'];
-            $news['newsAuthorNickname'] = $subrow['nick_name'];
-            $news['newsAuthorHeadPicUrl'] = getHeadPicURL($subrow['head_pic_url']);
-            array_push($newsList, $news);
+        if (!empty($news['photos'])) {
+            $tempPhotoId = $news['photos'][0]['photoId'];
+            $subret = $db->query("SELECT a.album_name,u.user_id ,u.username, u.nick_name, u.head_pic_url FROM photo AS p, album AS a, user AS u WHERE p.photo_id = '$tempPhotoId' AND p.album_id = a.album_id AND a.user_id = u.user_id");
+            if ($subrow = $subret->fetchArray()) {
+                $news['newsAlbumName'] = $subrow['album_name'];
+                $news['newsAuthorId'] = $subrow['user_id'];
+                $news['newsAuthorUsername'] = $subrow['username'];
+                $news['newsAuthorNickname'] = $subrow['nick_name'];
+                $news['newsAuthorHeadPicUrl'] = getHeadPicURL($subrow['head_pic_url']);
+                array_push($newsList, $news);
+            }
         }
     }
 } catch (Exception $e) {
