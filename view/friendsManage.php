@@ -6,6 +6,27 @@ checkSignIn();
 
 $headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
+
+try {
+    $db = getDB();
+
+    //获取关注用户的列表
+    $friendList = array();
+
+    $ret = $db->query("SELECT f.follow_id, u.username, u.nick_name, u.head_pic_url, u.user_sign FROM follow AS f, user AS u WHERE f.user_id = '$myUserId' AND f.follow_id = u.user_id");
+    while ($row = $ret->fetchArray()) {
+        $friend = array();
+        $friend['id'] = $row['follow_id'];
+        $friend['username'] = $row['username'];
+        $friend['nickname'] = $row['nick_name'];
+        $friend['headPicUrl'] = getHeadPicURL($row['head_pic_url']);
+        $friend['sign'] = $row['user_sign'];
+        array_push($friendList, $friend);
+    }
+} catch (Exception $e) {
+    header('location:error.php');
+}
 ?>
 <html lang="zh">
     <head>
@@ -25,6 +46,59 @@ $myUsername = $_COOKIE['username'];
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/searchBox.js"></script>
 
+        <script>
+            $('document').ready(function () {
+                new SearchBox($('#searchBoxContainer')).init();
+
+                let friendData = <?php echo json_encode($friendList)?>;
+                $.each(friendData, function (index, element) {
+                    let friend = $(`<li>
+                                    <div style="text-decoration: none" class="uk-padding-small uk-grid-small uk-position-relative" uk-grid>
+                                        <div class="uk-width-auto">
+                                            <div style="width: 50px; height: 50px; overflow: hidden; position: relative" class="uk-border-circle">
+                                                <img src="${element.headPicUrl}" />
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-expand uk-margin-left">
+                                            <p style="line-height: 30px" class="uk-margin-remove"><a href="homepage.php?username=${element.username}">${element.nickname}</a></p>
+                                            <p style="line-height: 20px" class="uk-margin-remove uk-padding-remove uk-text-meta">${element.sign}</p>
+                                        </div>
+                                        <div class="uk-width-auto uk-position-center-right">
+                                            <button class="uk-button uk-button-default">取消关注</button>
+                                        </div>
+                                    </div>
+                                  </li>`);
+                    adapt(friend.find('img'));
+                    friend.find('button').click(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type: 'POST',
+                            url: '../php/followUser.php',
+                            data: {
+                                myId: '<?php echo $myUserId?>',
+                                followId: element.id,
+                                state: 'true'
+                            },
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.code === 200) {
+                                    notification(data.msg, 'success');
+                                    friend.remove();
+                                }
+                                else {
+                                    notification(data.msg, 'danger');
+                                }
+                            },
+                            error: function (error) {
+                                notification("网络异常，请稍候再试。", 'warning');
+                            }
+                        })
+                    });
+
+                    $('#friendsList').append(friend);
+                })
+            });
+        </script>
     </head>
     <body>
         <header>
@@ -63,121 +137,24 @@ $myUsername = $_COOKIE['username'];
         <main>
             <section class="uk-section side-bar uk-visible@l">
                 <ul class="uk-nav uk-nav-default">
-                    <li class="uk-active">
+                    <li>
                         <a href="friendsNews.php">关注动态</a>
                     </li>
                     <li>
                         <a href="myNews.php">我的动态</a>
                     </li>
-                    <li>
-                        <a href="">关注管理</a>
+                    <li class="uk-active">
+                        <a>关注管理</a>
                     </li>
                 </ul>
             </section>
             <section>
-                <div id="friendsContainer" class="uk-flex uk-flex-center">
+                <div class="uk-flex uk-flex-center uk-padding">
+                    <ul id="friendsList" class="uk-list uk-list-divider uk-width-1-3"></ul>
                 </div>
             </section>
         </main>
         <footer>
         </footer>
     </body>
-    <script src="../js/component/friendNews.js"></script>
-    <script>
-
-        $('document').ready(function () {
-
-            new SearchBox($('#searchBoxContainer')).init();
-
-            let newsData = [{
-                friendHeadPicUrl: '../imgs/index/bg4.jpg',
-                friendHomePageUrl: 'hisPage.html',
-                friendName: '徐杨晨',
-                friendNewsContent: '这张照片好看吗？',
-                friendNewsTime: '20:19',
-                friendNewsPhotos: ['../imgs/index/bg1.jpg',
-                    '../imgs/index/bg2.jpg',
-                    '../imgs/index/bg3.jpg',
-                    '../imgs/index/bg4.jpg'],
-                friendNewsLikes: '10',
-                friendNewsIsLiked: false,
-                commentData: [{
-                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
-                    commentUsername: '徐梓航',
-                    commentContent: '好看！',
-                    commentTime: '20:30'
-                }, {
-                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
-                    commentUsername: '鄢巴德',
-                    commentContent: '不好看！',
-                    commentTime: '20:40'
-                }]
-            }, {
-                friendHeadPicUrl: '../imgs/index/bg4.jpg',
-                friendHomePageUrl: 'hisPage.html',
-                friendName: '徐杨晨',
-                friendNewsContent: '这张照片好看吗？',
-                friendNewsTime: '20:19',
-                friendNewsPhotos: ['../imgs/index/bg1.jpg',
-                    '../imgs/index/bg2.jpg',
-                    '../imgs/index/bg3.jpg',
-                    '../imgs/index/bg4.jpg'],
-                friendNewsLikes: '10',
-                friendNewsIsLiked: false,
-                commentData: [{
-                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
-                    commentUsername: '徐梓航',
-                    commentContent: '好看！',
-                    commentTime: '20:30'
-                }, {
-                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
-                    commentUsername: '鄢巴德',
-                    commentContent: '不好看！',
-                    commentTime: '20:40'
-                }]
-            }, {
-                friendHeadPicUrl: '../imgs/index/bg4.jpg',
-                friendHomePageUrl: 'hisPage.html',
-                friendName: '徐杨晨',
-                friendNewsContent: '这张照片好看吗？',
-                friendNewsTime: '20:19',
-                friendNewsPhotos: ['../imgs/index/bg1.jpg'],
-                friendNewsLikes: '10',
-                friendNewsIsLiked: false,
-                commentData: [{
-                    commentHeadPicUrl: '../imgs/index/bg3.jpg',
-                    commentUsername: '徐梓航',
-                    commentContent: '好看！',
-                    commentTime: '20:30'
-                }, {
-                    commentHeadPicUrl: '../imgs/index/bg2.jpg',
-                    commentUsername: '鄢巴德',
-                    commentContent: '不好看！',
-                    commentTime: '20:40'
-                }]
-            }];
-            let friendNews = new FriendNews(newsData);
-            $('#friendsNewsContainer').append(friendNews.render());
-
-
-            let friendsData = [
-                {
-                    name: '徐杨晨',
-                    headPicURL: '../imgs/index/bg2.jpg'
-                },
-                {
-                    name: '徐梓航',
-                    headPicURL: '../imgs/index/bg3.jpg'
-                },
-                {
-                    name: '徐杨晨',
-                    headPicURL: '../imgs/index/bg4.jpg'
-                }];
-            $.each(friendsData, function (index, val) {
-                $('.friends-list').append($(`<div><a href="${new URI(window.location.href).query({friendName: encodeURI(val.name)})}"><img class="uk-border-circle" src="${val.headPicURL}" title="${val.name}" uk-tooltip/></a></div>`));
-            });
-
-            $('footer').show();
-        });
-    </script>
 </html>

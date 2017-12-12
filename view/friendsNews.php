@@ -71,6 +71,12 @@ try {
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/searchBox.js"></script>
 
+        <script>
+
+            $('document').ready(function () {
+                new SearchBox($('#searchBoxContainer')).init();
+            });
+        </script>
     </head>
     <body>
         <header>
@@ -136,12 +142,11 @@ try {
                                     if (count($news['photos']) > 1) {
                                         $arrow = '<a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a><a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>';
                                     }
-                                    $photoClass = getPhotoWHRate($news['newsAuthorHeadPicUrl']) > 1 ? 'photo-long' : 'photo-high';
                                     echo '<li class="friend-news">
                                     <div class="uk-grid-small friend-news-header" uk-grid>
                                         <div class="uk-width-auto uk-align-center">
                                             <div style="width: 70px;height: 70px;overflow: hidden;position: relative" class="uk-border-circle">
-                                                 <img class="'.$photoClass.'" src="'.$news['newsAuthorHeadPicUrl'].'"/>
+                                                 <img class="'.getPhotoClass($news['newsAuthorHeadPicUrl']).'" src="'.$news['newsAuthorHeadPicUrl'].'"/>
                                             </div>
                                         </div>
                                         <div class="uk-width-expand uk-align-center">
@@ -171,12 +176,11 @@ try {
                                 if (count($news['photos']) > 1) {
                                     $arrow = '<a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a><a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>';
                                 }
-                                $photoClass = getPhotoWHRate($news['newsAuthorHeadPicUrl']) > 1 ? 'photo-long' : 'photo-high';
                                 echo '<li class="friend-news">
                                     <div class="uk-grid-small friend-news-header" uk-grid>
                                         <div class="uk-width-auto uk-align-center">
                                             <div style="width: 70px;height: 70px;overflow: hidden;position: relative" class="uk-border-circle">
-                                                 <img class="'.$photoClass.'" src="'.$news['newsAuthorHeadPicUrl'].'"/>
+                                                 <img class="'.getPhotoClass($news['newsAuthorHeadPicUrl']).'" src="'.$news['newsAuthorHeadPicUrl'].'"/>
                                             </div>
                                         </div>
                                         <div class="uk-width-expand uk-align-center">
@@ -220,11 +224,4 @@ try {
         <footer>
         </footer>
     </body>
-    <script src="../js/component/friendNews.js"></script>
-    <script>
-
-        $('document').ready(function () {
-            new SearchBox($('#searchBoxContainer')).init();
-        });
-    </script>
 </html>

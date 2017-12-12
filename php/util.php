@@ -22,3 +22,7 @@ function getPhotoWHRate($photoUrl){
     $size = getimagesize($photoUrl);
     return $size[0] / $size[1];
 }
+
+function getPhotoClass($photoUrl){
+    return getPhotoWHRate($photoUrl) > 1 ? 'photo-long' : 'photo-high';
+}

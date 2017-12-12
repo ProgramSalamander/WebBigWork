@@ -73,6 +73,12 @@ try {
         <script src="../js/component/myHeadPic.js"></script>
         <script src="../js/component/searchBox.js"></script>
 
+        <script>
+
+            $('document').ready(function () {
+                new SearchBox($('#searchBoxContainer')).init();
+            });
+        </script>
     </head>
     <body>
         <header>
@@ -193,11 +199,5 @@ try {
         <footer>
         </footer>
     </body>
-    <script src="../js/component/friendNews.js"></script>
-    <script>
 
-        $('document').ready(function () {
-            new SearchBox($('#searchBoxContainer')).init();
-        });
-    </script>
 </html>
