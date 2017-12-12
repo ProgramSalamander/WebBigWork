@@ -486,7 +486,7 @@ try {
                                     </div>
                                 </div>
                                 <div class="uk-margin uk-margin-remove-bottom uk-width-1-1">
-                                    <textarea id="content" class="uk-textarea" autofocus="autofocus" maxlength="50" placeholder="长度在50字以内"></textarea>
+                                    <textarea id="content" class="uk-textarea" maxlength="50" placeholder="长度在50字以内"></textarea>
                                     <button id="addComment" class="uk-align-right uk-margin uk-button uk-button-primary">发表</button>
                                 </div>
                             </article>
