@@ -53,7 +53,15 @@ UNION SELECT p.photo_id, p.photo_url, a.album_name, u.user_id, u.username, u.nic
         }
 
         //搜索相关摄影活动
-
+        $ret = $db->query("SELECT activity_id,activity_name, activity_location, activity_introduction FROM activity WHERE activity_name LIKE '%$keyword%' UNION SELECT activity_id,activity_name, activity_location, activity_introduction FROM activity WHERE activity_location LIKE '%$keyword%'");
+        while ($row = $ret->fetchArray()){
+            $activityInfo = array();
+            $activityInfo['id'] = $row['activity_id'];
+            $activityInfo['name'] = $row['activity_name'];
+            $activityInfo['location'] = $row['activity_location'];
+            $activityInfo['introduction'] = $row['activity_introduction'];
+            array_push($result['activity'], $activityInfo);
+        }
     } catch (Exception $e) {
         header('location: error.php');
     }
@@ -88,6 +96,9 @@ UNION SELECT p.photo_id, p.photo_url, a.album_name, u.user_id, u.username, u.nic
                 background: #dcdcdc;
             }
 
+            .uk-list ul{
+                padding-left: 0px;
+            }
 
         </style>
 
@@ -176,7 +187,17 @@ UNION SELECT p.photo_id, p.photo_url, a.album_name, u.user_id, u.username, u.nic
             function loadActivityResults() {
                 let activityResults = <?php echo json_encode($result['activity'])?>;
                 if (activityResults.length > 0){
-
+                    let list = $('<ul class="uk-list result-list"></ul>');
+                    $.each(activityResults, function (index, element) {
+                        list.append(`<li class="uk-card uk-card-default uk-padding-small">
+                            <a style="text-decoration: none" href="activity.php?ai=${element.id}">
+                                <h4>${element.name}</h4>
+                                <p class="uk-text-meta">${element.location}</p>
+                                <p class="uk-text-meta">${element.introduction}</p>
+                            </a>
+                        </li>`);
+                    });
+                    $('#activityResult').append(list);
                 }
                 else {
                     $('#activityResult').append($('<p>暂无结果</p>'));
@@ -197,7 +218,7 @@ UNION SELECT p.photo_id, p.photo_url, a.album_name, u.user_id, u.username, u.nic
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
-                        <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li><a href="friendsNews.php">朋友圈</a></li>
                         <li>
                             <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>

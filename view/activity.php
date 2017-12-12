@@ -51,6 +51,7 @@ try {
         <script src="../js/lib/jquery-3.2.1.min.js"></script>
         <script src="../js/lib/uikit.min.js"></script>
         <script src="../js/lib/uikit-icons.min.js"></script>
+        <script src="../js/lib/URI.min.js"></script>
         <script src="../js/util/notification.js"></script>
         <script src="../js/util/imageHelper.js"></script>
         <script src="../js/util/labels.js"></script>
@@ -67,7 +68,7 @@ try {
                 let activityList = <?php echo json_encode($activityList)?>;
 
                 $.each(activityList, function (index, element) {
-                    let activity = $(`<li class="uk-card uk-card-default uk-padding">
+                    let activity = $(`<li id="id${element.id}" class="uk-card uk-card-default uk-padding uk-open">
                                             <h3 class="uk-accordion-title">
                                                 ${element.name}
                                             </h3>
@@ -116,8 +117,12 @@ try {
                         activity.find('.uk-accordion-content').append(joinBtn);
                     }
                     $('#activityList').append(activity);
-                })
+                });
 
+                let uri = new URI();
+                if (uri.search(true).ai){
+                    $('#scroll').attr('href','#id'+uri.search(true).ai).get(0).click();
+                }
             });
         </script>
     </head>
@@ -134,7 +139,7 @@ try {
                         <li><a href="today.php">今日推荐</a></li>
                         <li class="uk-active"><a href="">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
-                        <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li><a href="friendsNews.php">朋友圈</a></li>
                         <li>
                             <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>
@@ -157,6 +162,7 @@ try {
         </header>
         <main>
             <section class="uk-section">
+                <a id="scroll" class="uk-hidden" uk-scroll>test</a>
                 <ul class="uk-padding-large uk-padding-remove-vertical" id="activityList" uk-accordion="multiple:true"></ul>
             </section>
         </main>

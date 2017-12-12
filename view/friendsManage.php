@@ -113,7 +113,7 @@ try {
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
-                        <li class="uk-active"><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li class="uk-active"><a href="friendsNews.php">朋友圈</a></li>
                         <li>
                             <a id="myHeadPic" href="">
                                 <script>

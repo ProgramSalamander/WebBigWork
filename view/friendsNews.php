@@ -91,7 +91,7 @@ try {
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
-                        <li class="uk-active"><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li class="uk-active"><a href="friendsNews.php">朋友圈</a></li>
                         <li>
                             <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>
@@ -158,7 +158,7 @@ try {
                                             <span style="line-height: 10px" class="uk-text-muted uk-text-small">'.$news['newsTime'].'</span>
                                         </div>
                                     </div>
-                                    <div class="uk-card uk-card-default uk-position-relative uk-visible-toggle uk-light friend-news-body" uk-slideshow>
+                                    <div class="uk-card uk-card-default uk-padding-small uk-position-relative uk-visible-toggle uk-light friend-news-body" uk-slideshow>
                                         <ul class="friend-news-photo-slide uk-slideshow-items">'.$photos.'</ul>
                                         '.$arrow.'
                                     </div>
@@ -192,7 +192,7 @@ try {
                                             <span style="line-height: 10px" class="uk-text-muted uk-text-small">'.$news['newsTime'].'</span>
                                         </div>
                                     </div>
-                                    <div class="uk-card uk-card-default uk-position-relative uk-visible-toggle uk-light friend-news-body" uk-slideshow>
+                                    <div class="uk-card uk-card-default uk-padding-small uk-position-relative uk-visible-toggle uk-light friend-news-body" uk-slideshow>
                                         <ul class="friend-news-photo-slide uk-slideshow-items">'.$photos.'</ul>
                                         '.$arrow.'
                                     </div>

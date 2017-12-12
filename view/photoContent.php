@@ -12,6 +12,7 @@ checkSignIn();
 
 $myUsername = $_COOKIE['username'];
 $myUserId = $_SESSION['user_info']['user_id'];
+$myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 
 if (!isset($_GET['id'])) {
     header('location: error.php');
@@ -382,11 +383,11 @@ try {
                         <li><a href="today.php">今日推荐</a></li>
                         <li><a href="activity.php">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
-                        <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
+                        <li><a href="friendsNews.php">朋友圈</a></li>
                         <li>
                             <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>
-                                    $('#myHeadPic').prepend(new MyHeadPic('<?php echo getHeadPicURL($_SESSION['user_info']['head_pic_url']) ?>', 50).render());
+                                    $('#myHeadPic').prepend(new MyHeadPic('<?php echo $myHeadPicUrl ?>', 50).render());
                                 </script>
                             </a>
                             <div class="uk-width-small uk-navbar-dropdown">
@@ -466,11 +467,13 @@ try {
                                 <div class="uk-grid uk-grid-medium" uk-grid>
                                     <div class="uk-width-auto">
                                         <div style="width: 60px;height: 60px;overflow: hidden;" class="uk-border-circle">
-                                            <img src="<?php echo getHeadPicURL($_SESSION['user_info']['head_pic_url']) ?>" alt="">
+                                            <img class="<?php echo getPhotoClass($myHeadPicUrl)?>" src="<?php echo $myHeadPicUrl ?>">
                                         </div>
                                     </div>
                                     <div class="uk-width-1-2">
-                                        <h4 class="uk-h4 uk-margin-remove"><a style="text-decoration: none" class="uk-button-text"><?php echo $_SESSION['user_info']['nick_name']?></a></h4>
+                                        <h4 class="uk-h4 uk-margin-remove"><a style="text-decoration: none"
+                                                                              class="uk-button-text"><?php echo $_SESSION['user_info']['nick_name'] ?></a>
+                                        </h4>
                                         <div class="uk-comment-meta uk-subnav uk-margin-remove-top">
                                             <span class="uk-width-large">现在</span>
                                         </div>
