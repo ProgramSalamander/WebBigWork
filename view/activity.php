@@ -6,7 +6,38 @@ checkSignIn();
 
 $headPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
 $myUsername = $_COOKIE['username'];
+$myUserId = $_SESSION['user_info']['user_id'];
 
+$activityList = array();
+try {
+    $db = getDB();
+
+    //获取活动基本信息
+    $ret = $db->query("SELECT * FROM activity ORDER BY activity_create_time DESC");
+    while ($row = $ret->fetchArray()) {
+        $activity = array();
+        $activity['id'] = $row['activity_id'];
+        $activity['name'] = $row['activity_name'];
+        $activity['startTime'] = $row['activity_start_time'];
+        $activity['endTime'] = $row['activity_end_time'];
+        $activity['location'] = $row['activity_location'];
+        $activity['introduction'] = $row['activity_introduction'];
+        $activity['isNew'] = (date('Y-m-d') == date('Y-m-d', strtotime($row['activity_create_time'])));
+
+        $activityId = $activity['id'];
+        //获取活动是否参加
+        $subret = $db->query("SELECT * FROM activity_join_record WHERE activity_id = '$activityId' AND user_id = '$myUserId'");
+        if ($subret->fetchArray()) {
+            $activity['isJoin'] = true;
+        } else {
+            $activity['isJoin'] = false;
+        }
+        array_push($activityList, $activity);
+    }
+
+} catch (Exception $e) {
+    header("location: error.php");
+}
 ?>
 <html lang="zh">
     <head>
@@ -28,12 +59,64 @@ $myUsername = $_COOKIE['username'];
         <script src="../js/component/photoCard.js"></script>
         <script src="../js/component/searchBox.js"></script>
 
-
         <script>
 
             $('document').ready(function () {
                 new SearchBox($('#searchBoxContainer')).init();
 
+                let activityList = <?php echo json_encode($activityList)?>;
+
+                $.each(activityList, function (index, element) {
+                    let activity = $(`<li class="uk-card uk-card-default uk-padding">
+                                            <h3 class="uk-accordion-title">
+                                                ${element.name}
+                                            </h3>
+                                            <div class="uk-accordion-content">
+                                                <div>
+                                                    <p>开始日期：<span class="uk-text-meta">${element.startTime}</span></p>
+                                                    <p>结束日期：<span class="uk-text-meta">${element.endTime}</span></p>
+                                                    <p>活动地点：<span class="uk-text-meta">${element.location}</span></p>
+                                                    <p>活动简介：<span class="uk-text-meta">${element.introduction}</span></p>
+                                                </div>
+                                            </div>
+                                        </li>`);
+                    if (element.isNew) {
+                        activity.prepend($('<img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>'));
+                    }
+                    if (element.isJoin) {
+                        activity.find('.uk-accordion-content').append($('<button disabled class="uk-align-right uk-button uk-button-primary">已加入</button>'));
+                    }
+                    else {
+                        let joinBtn = $('<button class="uk-align-right uk-button uk-button-primary">加入</button>');
+                        joinBtn.click(function (ev) {
+                            ev.preventDefault();
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '../php/joinActivity.php',
+                                data: {
+                                    activityId: element.id,
+                                    userId: '<?php echo $myUserId?>'
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.code === 200){
+                                        notification(data.msg, 'success');
+                                        joinBtn.attr('disabled',true).text('已加入');
+                                    }
+                                    else {
+                                        notification(data.msg,'danger');
+                                    }
+                                },
+                                error: function (error) {
+                                    notification('网络异常，请稍候再试', 'warning');
+                                }
+                            });
+                        });
+                        activity.find('.uk-accordion-content').append(joinBtn);
+                    }
+                    $('#activityList').append(activity);
+                })
 
             });
         </script>
@@ -48,8 +131,8 @@ $myUsername = $_COOKIE['username'];
                 <div class="uk-navbar-right">
                     <div id="searchBoxContainer"></div>
                     <ul class="uk-navbar-nav">
-                        <li><a href="">今日推荐</a></li>
-                        <li class="uk-active"><a href="activity.php">一起拍</a></li>
+                        <li><a href="today.php">今日推荐</a></li>
+                        <li class="uk-active"><a href="">一起拍</a></li>
                         <li><a href="ground.php">四处逛逛</a></li>
                         <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
@@ -74,120 +157,7 @@ $myUsername = $_COOKIE['username'];
         </header>
         <main>
             <section class="uk-section">
-                <ul class="uk-padding-large uk-padding-remove-vertical" id="activityList" uk-accordion="multiple:true">
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                    <li class="uk-card uk-card-default uk-padding">
-                        <img style="width: 40px;height: 40px" class="uk-position-top-left" src="../imgs/icon/new.svg"/>
-                        <h3 class="uk-accordion-title">
-                            南京街拍大赛
-                            <span class="uk-margin-left uk-text-meta">参与人数 <span class="uk-badge uk-background-primary">20</span></span>
-                        </h3>
-                        <div class="uk-accordion-content">
-                            <div class="">
-                                <p>开始日期：<span class="uk-text-meta">2017-12-10</span></p>
-                                <p>结束日期：<span class="uk-text-meta">2017-12-11</span></p>
-                                <p>活动地点：<span class="uk-text-meta">南京市</span></p>
-                                <p>活动简介：<span class="uk-text-meta">喜爱街拍的朋友们，赶快加入我们吧！</span></p>
-                            </div>
-                            <button class="uk-align-right uk-button uk-button-primary">加入</button>
-                        </div>
-                    </li>
-                </ul>
+                <ul class="uk-padding-large uk-padding-remove-vertical" id="activityList" uk-accordion="multiple:true"></ul>
             </section>
         </main>
         <footer>
