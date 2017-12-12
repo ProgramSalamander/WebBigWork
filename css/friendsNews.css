@@ -16,8 +16,8 @@
 }
 
 .friend-head-pic {
-    width: 80px;
-    height: 80px;
+    /*width: 80px;*/
+    /*height: 80px;*/
     vertical-align: middle;
 }
 
@@ -86,9 +86,4 @@
     bottom: 0;
     overflow: scroll;
     /*background: pink;*/
-}
-
-.friends-list img{
-    width: 60px;
-    height: 60px;
 }

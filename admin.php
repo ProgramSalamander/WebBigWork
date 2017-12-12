@@ -24,7 +24,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 <html lang="zh">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 专注于约拍的网站</title>
+        <title>iPaiPai - 专注于摄影社交的网站</title>
         <link rel="stylesheet" href="css/uikit.min.css">
         <script src="js/lib/jquery-3.2.1.min.js"></script>
         <script src="js/lib/uikit.min.js"></script>

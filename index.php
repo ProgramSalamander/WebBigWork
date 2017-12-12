@@ -8,7 +8,7 @@ if (!empty($_COOKIE['username'])) {
 <html lang="zh">
     <head>
         <meta charset="UTF-8">
-        <title>iPaiPai - 专注于约拍的网站</title>
+        <title>iPaiPai - 专注于摄影社交的网站</title>
         <link rel="stylesheet" href="css/uikit.min.css"/>
         <link rel="stylesheet" href="css/index.css"/>
 

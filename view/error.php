@@ -53,7 +53,7 @@ $myHeadPicUrl = getHeadPicURL($_SESSION['user_info']['head_pic_url']);
                         <li><a href="ground.php">四处逛逛</a></li>
                         <li><a href="friendsNews.php">朋友圈<span class="uk-badge">8</span></a></li>
                         <li>
-                            <a id="myHeadPic" href="">
+                            <a id="myHeadPic" href="homepage.php?username=<?php echo $myUsername ?>">
                                 <script>
                                     $('#myHeadPic').prepend(new MyHeadPic('<?php echo $myHeadPicUrl?>', 50).render());
                                 </script>

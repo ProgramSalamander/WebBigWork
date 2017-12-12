@@ -13,7 +13,7 @@ try {
     $db = getDB();
 
     //获取今日热门作品
-    $ret = $db->query("SELECT p.photo_id,p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l, like_comment_record AS r WHERE date(p.add_time) = date() AND p.photo_id = r.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id GROUP BY p.photo_id ORDER BY count(record_id) DESC LIMIT 10");
+    $ret = $db->query("SELECT p.photo_id,p.photo_url,a.album_name,u.username,u.nick_name,l.label_eng_name,l.label_chi_name FROM photo AS p, album AS a, user AS u, label AS l, like_comment_record AS r WHERE p.photo_id = r.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id AND p.label_id = l.label_id GROUP BY p.photo_id ORDER BY count(record_id) DESC LIMIT 10");
     while ($row = $ret->fetchArray()) {
         $photo = array();
         $photo['photoId'] = $row['photo_id'];
@@ -27,7 +27,7 @@ try {
     }
 
     //获取今日人气明星
-    $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, count(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND date(l.record_time) = date() AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
+    $ret = $db->query("SELECT u.head_pic_url, u.username, u.nick_name, count(l.record_id) AS today_likes FROM like_comment_record AS l, user AS u, album AS a, photo AS p WHERE l.type = 'l' AND l.photo_id = p.photo_id AND p.album_id = a.album_id AND a.user_id = u.user_id GROUP BY u.user_id ORDER BY today_likes DESC LIMIT 3");
     while ($row = $ret->fetchArray()) {
         $star = array();
         $star['headPicUrl'] = getHeadPicURL($row['head_pic_url']);

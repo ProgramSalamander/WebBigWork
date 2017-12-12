@@ -1,15 +1,24 @@
 function adapt(img) {
-    // let src = img.get(0).src;
-    // img.get(0).src = '../../imgs/preload.jpeg';
-    img.get(0).onload = function () {
-        // img.get(0).src = src;
-        if (img.get(0).naturalWidth > img.get(0).naturalHeight) {
-            img.removeClass().addClass('photo-long');
-        }
-        else {
-            img.removeClass().addClass('photo-high');
-        }
-    };
+    if (img.get) {
+        img.get(0).onload = function () {
+            if (img.get(0).naturalWidth > img.get(0).naturalHeight) {
+                img.removeClass().addClass('photo-long');
+            }
+            else {
+                img.removeClass().addClass('photo-high');
+            }
+        };
+    }
+    else {
+        img.onload = function () {
+            if (img.naturalWidth > img.naturalHeight) {
+                img.className = 'photo-long';
+            }
+            else {
+                img.className = 'photo-high';
+            }
+        };
+    }
 
 }
 

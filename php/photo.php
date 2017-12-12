@@ -42,7 +42,7 @@ if (isset($_POST['callFunc'])) {
                             $db->exec("INSERT INTO photo(album_id, add_time, photo_url, label_id) VALUES ((SELECT album_id FROM album WHERE user_id = '$userId' AND album_name = '$destAlbumName'),'$date','$photoUrl',(SELECT album.label_id FROM album WHERE user_id = '$userId' AND album_name = '$destAlbumName'))");
                         }
                     }
-                    $ret = $db->query("SELECT photo_id FROM photo WHERE album_id = (SELECT album_id FROM album WHERE album_name = '$destAlbumName') AND add_time = '$date'");
+                    $ret = $db->query("SELECT photo_id FROM photo WHERE album_id = (SELECT album_id FROM album WHERE album_name = '$destAlbumName' AND user_id = '$userId') AND add_time = '$date'");
                     while ($row = $ret->fetchArray()) {
                         $photoId = $row['photo_id'];
                         $db->exec("INSERT INTO photos_of_news(news_id, photo_id) VALUES ('$newsId','$photoId')");
