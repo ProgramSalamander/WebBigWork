@@ -411,11 +411,17 @@ try {
                         <img src="../imgs/icon/like.svg"/>
                     </button>
                 </div>
-                <div class="uk-flex uk-flex-center">
-                    <div id="photoContainer" uk-lightbox>
-                        <a href="<?php echo $photoInfo['photoUrl'] ?>">
-                            <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
-                        </a>
+                <div class="uk-flex uk-flex-center uk-text-center">
+                    <div class="uk-inline-clip uk-transition-toggle">
+                        <div id="photoContainer" uk-lightbox>
+                            <a href="<?php echo $photoInfo['photoUrl'] ?>">
+                                <img src="<?php echo $photoInfo['photoUrl'] ?>"/>
+                            </a>
+                        </div>
+                        <div class="uk-position-center uk-transition-fade uk-overlay uk-overlay-default">
+                            <div class="uk-transition-slide-top-small"><h4 class="uk-margin-remove">查看</h4></div>
+                            <div class="uk-transition-slide-bottom-small"><h4 class="uk-margin-remove">大图</h4></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -467,7 +473,7 @@ try {
                                 <div class="uk-grid uk-grid-medium" uk-grid>
                                     <div class="uk-width-auto">
                                         <div style="width: 60px;height: 60px;overflow: hidden;" class="uk-border-circle">
-                                            <img class="<?php echo getPhotoClass($myHeadPicUrl)?>" src="<?php echo $myHeadPicUrl ?>">
+                                            <img class="<?php echo getPhotoClass($myHeadPicUrl) ?>" src="<?php echo $myHeadPicUrl ?>">
                                         </div>
                                     </div>
                                     <div class="uk-width-1-2">
